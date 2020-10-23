@@ -3,7 +3,7 @@ compiler:
   - clang++
 branches:
   only:
-  - main
+  - master
   - develop
 script:
   - cd test/build
