@@ -8,4 +8,5 @@ branches:
 script:
   - cd test/build
   - cmake ..
+  - make
   - ./test.out
