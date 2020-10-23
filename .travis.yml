@@ -1,0 +1,11 @@
+language: cpp
+compiler:
+  - clang++
+branches:
+  only:
+  - main
+  - develop
+script:
+  - cd test/build
+  - cmake ..
+  - ./test.out
