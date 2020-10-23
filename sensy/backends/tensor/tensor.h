@@ -1,33 +1,8 @@
-/*  MIT License
-    Copyright (c) [2019] [Yuta Kambara]
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to
-   deal in the Software without restriction, including without limitation the
-   rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-   sell copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-    The above copyright notice and this permission notice shall be included in
-   all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED
-   "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
-   LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-   PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
-/*  Configurable MACROs:
-      TENSOR_ENABLE_ASSERTS
-        - enable range check when access to elements.
-          (cause performance overhead)
-      TENSOR_DEFAULT_INTERNAL_TYPE = T
-        - use T as internal index type.
-          T must be integer type.
-          (default is std::size_t)
-      TENSOR_ENABLE_SIMD
-        - enable simd acceleration.
-          (require compiler supports)
-*/
+/**
+ * @file tensor.h
+ * @brief tensor core header
+ * @author Yuta Kambara
+ */
 
 #pragma once
 
@@ -83,7 +58,7 @@
 #include <immintrin.h>
 #endif
 
-namespace tsr {
+namespace ts {
 
 /* the bese class of all tensor classes */
 class tensor_internal {};
@@ -345,9 +320,9 @@ public:
 
   T *end() { return _data + _num_elements; }
 
-  const T *const begin() const { return _data; }
+  T *begin() const { return _data; }
 
-  const T *const end() const { return _data + _num_elements; }
+  T *end() const { return _data + _num_elements; }
 
   T *&data() { return _data; }
 
@@ -579,13 +554,13 @@ public:
 
   T *end() { return _data + _num_elements; }
 
-  const T *const begin() const { return _data; }
+  T *begin() const { return _data; }
 
-  const T *const end() const { return _data + _num_elements; }
+  T *end() const { return _data + _num_elements; }
 
   T *&data() { return _data; }
 
-  T *const data() const { return _data; }
+  T *data() const { return _data; }
 
   void fill(T x) { std::fill(_data, _data + _num_elements, x); }
 
@@ -788,7 +763,7 @@ public:
   }
 
   template <typename... Args>
-  tensor(Args... args) : tensor({static_cast<_internal_t>(args)...}){};
+  tensor(Args... args) : tensor({static_cast<_internal_t>(args)...}) {}
 
   tensor(const tensor_view<T, D, _internal_t> &view)
       : _data(nullptr), _dims(D), _strides(D) {
@@ -952,13 +927,13 @@ public:
 
   T *end() { return _data + _num_elements; }
 
-  const T *const begin() const { return _data; }
+  T *begin() const { return _data; }
 
-  const T *const end() const { return _data + _num_elements; }
+  T *end() const { return _data + _num_elements; }
 
   T *&data() { return _data; }
 
-  const T *const data() const { return _data; }
+  T *data() const { return _data; }
 
   void fill(T x) { std::fill(_data, _data + _num_elements, x); }
 
@@ -1313,13 +1288,13 @@ public:
 
   T *end() { return _data + _num_elements; }
 
-  const T *const begin() const { return _data; }
+  T *begin() const { return _data; }
 
-  const T *const end() const { return _data + _num_elements; }
+  T *end() const { return _data + _num_elements; }
 
   T *&data() { return _data; }
 
-  const T *const data() const { return _data; }
+  T *data() const { return _data; }
 
   void fill(T x) { std::fill(_data, _data + _num_elements, x); }
 
@@ -1370,10 +1345,10 @@ public:
 template <typename T, typename INTERNAL_TYPE = TENSOR_DEFAULT_INTERNAL_TYPE>
 using vector = tensor<T, 1, INTERNAL_TYPE>;
 
-} // namespace tsr
+} // namespace ts
 
 /*--- Expression Templates ---*/
-namespace tsr {
+namespace ts {
 template <typename L, typename Op, typename R, typename T, typename ITYPE>
 class Expr : public tensor_internal {
 public:
@@ -1639,4 +1614,4 @@ Expr<L, Mul, R, typename L::value_type> operator*(const L &lhs, const R &rhs) {
                                                                           rhs);
 }
 
-} // namespace tsr
+} // namespace ts
