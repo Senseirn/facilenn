@@ -10,3 +10,4 @@ set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -s -DNDEBUG -march=native")
 
 
 add_executable(test.out test.cpp)
+target_include_directories(test.out PRIVATE ../)
