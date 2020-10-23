@@ -40,4 +40,4 @@
 .envrc
 
 test/build/*
-test/build/.keep
+!test/build/.keep
