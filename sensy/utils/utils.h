@@ -6,5 +6,5 @@
 #include <vector>
 
 namespace ssy {
-namespace utils {}
+  namespace utils {}
 } // namespace ssy
