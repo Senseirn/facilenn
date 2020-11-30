@@ -153,7 +153,7 @@ Language: Cpp
 # NI_None (in configuration: None) Don’t indent in namespaces.
 # NI_Inner (in configuration: Inner) Indent only in inner namespaces (nested in other namespaces).
 # NI_All (in configuration: All) Indent in all namespaces.
-#NamespaceIndentation: All
+NamespaceIndentation: All
 
 # The number of characters to use for indentation of ObjC blocks.
 #ObjCBlockIndentWidth: 4
