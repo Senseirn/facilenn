@@ -1,9 +1,9 @@
 #pragma once
 
-#include "sensy/backends/backends.h"
-#include "sensy/utils/utils.h"
+#include "facilenn/backends/backends.h"
+#include "facilenn/utils/utils.h"
 
-namespace ssy {
+namespace fnn {
   namespace layers {
     template <typename T>
     class abstract_layer {
@@ -11,4 +11,4 @@ namespace ssy {
       tensor2d<float> _in;
     };
   } // namespace layers
-} // namespace ssy
+} // namespace fnn

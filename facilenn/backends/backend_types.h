@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ssy {
+namespace fnn {
   namespace backends {
     enum class backend_t {
       naive,
@@ -10,4 +10,4 @@ namespace ssy {
       cublas
     };
   }
-} // namespace ssy
+} // namespace fnn

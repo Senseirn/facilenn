@@ -1,9 +1,9 @@
 #pragma once
 
-#include "sensy/backends/backend_types.h"
-#include "sensy/utils/utils.h"
+#include "facilenn/backends/backend_types.h"
+#include "facilenn/utils/utils.h"
 
-namespace ssy {
+namespace fnn {
   namespace core {
     class context {
      private:
@@ -20,4 +20,4 @@ namespace ssy {
       }
     };
   } // namespace core
-} // namespace ssy
+} // namespace fnn

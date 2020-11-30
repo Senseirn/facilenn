@@ -5,6 +5,6 @@
 #include <string>
 #include <vector>
 
-namespace ssy {
+namespace fnn {
   namespace utils {}
-} // namespace ssy
+} // namespace fnn

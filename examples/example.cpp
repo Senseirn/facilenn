@@ -1,3 +1,3 @@
-#include "../sensy/sensy.h"
+#include "../facilenn/facilenn.h"
 
-int main() { using namespace ssy; }
+int main() { using namespace fnn; }
