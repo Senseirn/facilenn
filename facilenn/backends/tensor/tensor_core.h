@@ -694,6 +694,7 @@ namespace ts {
     void init(T* p, std::vector<_internal_t>& dims, std::vector<_internal_t>& strides) {
       _dim = dims[0];
       _p = p;
+      (void)strides;
     }
 
     inline T& operator[](const _internal_t i) {
