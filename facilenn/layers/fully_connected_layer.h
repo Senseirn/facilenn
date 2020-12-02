@@ -24,14 +24,23 @@ namespace fnn {
         // temporary return prev_out
         this->_in = prev_out;
         this->_out = this->_in;
+
+        MAYBE_UNUSED(ctx);
+
         return this->_out;
       }
 
       tensor2d<T>& backward(tensor2d<T>& next_delta, core::context& ctx) override {
+        MAYBE_UNUSED(ctx);
+
         return next_delta;
       }
 
-      tensor2d<T>& optimize(tensor2d<T>&, core::context& ctx) override { return this->_weight; }
+      tensor2d<T>& optimize(tensor2d<T>&, core::context& ctx) override {
+        MAYBE_UNUSED(ctx);
+
+        return this->_weight;
+      }
 
       void initialize(
           std::function<void(tensor2d<T>&)> initializer =
