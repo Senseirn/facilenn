@@ -10,11 +10,12 @@ int main() {
     for (auto& e : x)
       e = (float)0.1;
   };
+
   fc1->initialize(weight_initiaizer, 5);
   fc2->initialize(weight_initiaizer, 5);
 
-  fc1->make_conenction(nullptr, fc2);
-  fc2->make_conenction(fc1, nullptr);
+  fc1->make_connection(nullptr, fc2);
+  fc2->make_connection(fc1, nullptr);
 
   if (fc1->check_connection())
     std::cout << "fc1 connectable!" << std::endl;
@@ -25,5 +26,12 @@ int main() {
   for (auto e : fc1->weight()) {
     std::cout << e << std::endl;
   }
+
+  std::cout << (fc1->type() == layers::layer_types::fully_connected) << std::endl;
+
   std::cout << "build success" << std::endl;
+
+  fnn::network<float> net;
+  net.add(new layers::fully_connected_layer<float>(2, 4));
+  net.initialize(weight_initiaizer);
 }

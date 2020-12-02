@@ -48,9 +48,9 @@ namespace fnn {
       virtual tensor2d<T>& backward(tensor2d<T>&, core::context&) = 0;
       virtual tensor2d<T>& optimize(tensor2d<T>&, core::context&) = 0;
 
-      virtual layer_types layer_type() { return _layer_type; }
+      virtual layer_types type() { return _layer_type; }
       virtual void initialize(std::function<void(tensor2d<T>&)>, std::size_t) = 0;
-      virtual void make_conenction(layer_t* prev_layer, layer_t* next_layer) {
+      virtual void make_connection(layer_t* prev_layer, layer_t* next_layer) {
         _prev_layer = prev_layer;
         _next_layer = next_layer;
       }
