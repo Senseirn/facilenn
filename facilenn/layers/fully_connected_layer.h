@@ -50,7 +50,7 @@ namespace fnn {
               },
           std::size_t n_batch = 1) override {
         this->_n_batch = n_batch;
-        this->_in.reshape(this->_n_batch, this->_in_size * this->_out_size);
+        this->_in.reshape(this->_n_batch, this->_in_size);
         this->_weight.reshape(this->_in_size, this->_out_size);
         this->_out.reshape(this->_n_batch, this->_out_size);
         this->_delta.reshape(this->_in_size, this->_out_size);
@@ -61,9 +61,22 @@ namespace fnn {
 
       // TODO: implement
       // check if prev layer and next layer are connectable to this layer.
-      bool is_connectable() override { return true; }
+      bool check_connection() override {
+        if (!this->is_connected())
+          return false;
 
-      ~fully_connected_layer() { std::cout << "fc destructor called!" << std::endl; }
+        if (this->_prev_layer &&
+            this->_prev_layer->out().num_elements() != this->_in.num_elements())
+          return false;
+
+        if (this->_next_layer &&
+            this->_next_layer->in().num_elements() != this->_out.num_elements())
+          return false;
+
+        return true;
+      }
+
+      ~fully_connected_layer() {}
     };
   } // namespace layers
 } // namespace fnn

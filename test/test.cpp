@@ -16,7 +16,10 @@ int main() {
   fc1->make_conenction(nullptr, fc2);
   fc2->make_conenction(fc1, nullptr);
 
-  if (fc1->is_connected())
+  if (fc1->check_connection())
+    std::cout << "fc1 connectable!" << std::endl;
+
+  if (fc1->check_connection())
     std::cout << "connected!" << std::endl;
 
   for (auto e : fc1->weight()) {

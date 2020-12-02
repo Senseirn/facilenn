@@ -56,9 +56,9 @@ namespace fnn {
       }
 
       virtual bool is_connected() { return _prev_layer || _next_layer; }
-      virtual bool is_connectable() = 0;
+      virtual bool check_connection() = 0;
 
-      virtual ~abstract_layer() { std::cout << "abst destructor called!" << std::endl; }
+      virtual ~abstract_layer() {}
     };
   } // namespace layers
 } // namespace fnn
