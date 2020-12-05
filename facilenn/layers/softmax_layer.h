@@ -1,5 +1,6 @@
 #pragma once
 
+#include "facilenn/core/op/activation_softmax_ops.h"
 #include "facilenn/layers/abstract_layer.h"
 
 namespace fnn {
@@ -30,10 +31,8 @@ namespace fnn {
         // temporary return prev_out
         this->_in = std::move(prev_out);
 
-        FNN_MAYBE_UNUSED(ctx);
-
         if (!this->_next_layer)
-          this->_next_layer->forward(this->_out, ctx);
+          this->_next_layer->forward(op::softmax_activation_forward_kernel(this->_in, this->_out, ctx), ctx);
 
         return this->_out;
       }
