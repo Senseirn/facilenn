@@ -22,6 +22,8 @@ namespace fnn {
       tensor2d<T> _bias;
       tensor2d<T> _weight;
       tensor2d<T> _delta;
+      tensor2d<T> _delta_weight;
+      tensor2d<T> _delta_bias;
 
       std::size_t _in_size;
       std::size_t _out_size;
@@ -47,6 +49,8 @@ namespace fnn {
       virtual tensor2d<T>& bias() { return _bias; }
       virtual tensor2d<T>& weight() { return _weight; }
       virtual tensor2d<T>& delta() { return _delta; }
+      virtual tensor2d<T>& delta_weight() { return _delta_weight; }
+      virtual tensor2d<T>& delta_bias() { return _delta_bias; }
 
       virtual tensor2d<T>& forward(tensor2d<T>&, core::context&) = 0;
       virtual tensor2d<T>& backward(tensor2d<T>&, core::context&) = 0;
