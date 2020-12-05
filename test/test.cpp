@@ -2,10 +2,12 @@
 
 int main() {
   using namespace fnn;
-  auto fc1 = new layers::fully_connected_layer<float>(2, 4);
-  auto fc2 = new layers::fully_connected_layer<float>(4, 3);
-  // layers::fully_connected_layer<float> fc1(2, 4);
-  // layers::fully_connected_layer<float> fc2(4, 3);
+  using namespace fnn::layers;
+  using namespace core::optimizers;
+
+  auto fc1 = new fully_connected_layer<float>(2, 4);
+  auto fc2 = new fully_connected_layer<float>(4, 3);
+
   auto weight_initiaizer = [](tensor2d<float>& x) {
     for (auto& e : x)
       e = (float)0.1;
@@ -27,11 +29,12 @@ int main() {
     std::cout << e << std::endl;
   }
 
-  std::cout << (fc1->type() == layers::layer_types::fully_connected) << std::endl;
+  std::cout << (fc1->layer_type() == layer_types::fully_connected) << std::endl;
 
   std::cout << "build success" << std::endl;
 
   fnn::network<float> net;
-  net.add(new layers::fully_connected_layer<float>(2, 4));
+  net.add(new fully_connected_layer<float>(2, 4, sgd<float>(0.1)));
+  net.add(new fully_connected_layer<float>(4, 1));
   net.initialize(weight_initiaizer);
 }

@@ -6,6 +6,8 @@
 
 namespace fnn {
   namespace layers {
+    using namespace core;
+    using namespace optimizers;
     // forward declaration
     template <typename T>
     class abstract_layer;
@@ -48,8 +50,11 @@ namespace fnn {
       virtual tensor2d<T>& backward(tensor2d<T>&, core::context&) = 0;
       virtual tensor2d<T>& optimize(tensor2d<T>&, core::context&) = 0;
 
-      virtual layer_types type() { return _layer_type; }
+      virtual layer_types layer_type() { return _layer_type; }
       virtual void initialize(std::function<void(tensor2d<T>&)>, std::size_t) = 0;
+
+      virtual void set_optimizer(std::unique_ptr<abstract_optimizer<T>>) {}
+
       virtual void make_connection(layer_t* prev_layer, layer_t* next_layer) {
         _prev_layer = prev_layer;
         _next_layer = next_layer;
