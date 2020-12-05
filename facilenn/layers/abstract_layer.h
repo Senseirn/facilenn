@@ -19,6 +19,7 @@ namespace fnn {
       // TODO: 基底クラスで定義しないようにする (使わないとき無駄になる && 初期化が面倒)
       tensor2d<T> _in;
       tensor2d<T> _out;
+      tensor2d<T> _bias;
       tensor2d<T> _weight;
       tensor2d<T> _delta;
 
@@ -43,6 +44,7 @@ namespace fnn {
 
       virtual tensor2d<T>& in() { return _in; }
       virtual tensor2d<T>& out() { return _out; }
+      virtual tensor2d<T>& bias() { return _bias; }
       virtual tensor2d<T>& weight() { return _weight; }
       virtual tensor2d<T>& delta() { return _delta; }
 
