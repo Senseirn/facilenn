@@ -5,3 +5,4 @@
 #include "facilenn/layers/layer_types.h"
 #include "facilenn/layers/optimizer_helpers.h"
 #include "facilenn/layers/relu_layer.h"
+#include "facilenn/layers/softmax_layer.h"

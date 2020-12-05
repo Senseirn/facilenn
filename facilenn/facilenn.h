@@ -17,7 +17,13 @@ namespace fnn {
       _net.push_back(std::unique_ptr<layers::abstract_layer<T>>(layer));
     }
 
-    void initialize(std::function<void(tensor2d<float>&)> initializer, std::size_t n_batch = 1) {
+    void initialize(
+        std::function<void(tensor2d<float>&)> initializer =
+            [](tensor2d<float>& x) {
+              for (auto& e : x)
+                e = (float)0.1;
+            },
+        std::size_t n_batch = 1) {
       for (auto& l : _net)
         l->initialize(initializer, n_batch);
 
