@@ -28,8 +28,7 @@ namespace fnn {
       tensor2d<T>& forward(tensor2d<T>& prev_out, core::context& ctx) override {
 
         // temporary return prev_out
-        this->_in = prev_out;
-        this->_out = this->_in;
+        this->_in = std::move(prev_out);
 
         FNN_MAYBE_UNUSED(ctx);
 
@@ -90,12 +89,10 @@ namespace fnn {
         if (!this->is_connected())
           return false;
 
-        if (this->_prev_layer &&
-            this->_prev_layer->out().num_elements() != this->_in.num_elements())
+        if (this->_prev_layer && this->_prev_layer->out().num_elements() != this->_in.num_elements())
           return false;
 
-        if (this->_next_layer &&
-            this->_next_layer->in().num_elements() != this->_out.num_elements())
+        if (this->_next_layer && this->_next_layer->in().num_elements() != this->_out.num_elements())
           return false;
 
         return true;
