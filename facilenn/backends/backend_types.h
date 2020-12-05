@@ -9,5 +9,7 @@ namespace fnn {
       cuda, // naive cuda
       cublas
     };
-  }
+
+    enum class prallelize_t { none, openmp, tbb };
+  } // namespace backends
 } // namespace fnn
