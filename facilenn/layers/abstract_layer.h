@@ -51,7 +51,7 @@ namespace fnn {
       virtual tensor2d<T>& optimize(tensor2d<T>&, core::context&) = 0;
 
       virtual layer_types layer_type() { return _layer_type; }
-      virtual void initialize(std::function<void(tensor2d<T>&)>, std::size_t) = 0;
+      virtual bool initialize(std::function<void(tensor2d<T>&)>, std::size_t) = 0;
 
       virtual void set_optimizer(std::unique_ptr<abstract_optimizer<T>>) {}
 

@@ -35,6 +35,7 @@ int main() {
 
   fnn::network<float> net;
   net.add(new fully_connected_layer<float>(2, 4, sgd<float>(0.1)));
+  net.add(new relu_layer<float>(4, 4));
   net.add(new fully_connected_layer<float>(4, 1));
   net.initialize(weight_initiaizer);
 }
