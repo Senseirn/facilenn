@@ -4,6 +4,7 @@
 
 namespace fnn {
   namespace layers {
+
     template <typename T>
     class fully_connected_layer : public abstract_layer<T> {
       using layer_t = abstract_layer<T>;
@@ -39,7 +40,9 @@ namespace fnn {
         FNN_MAYBE_UNUSED(ctx);
 
         if (!this->_next_layer)
-          this->_next_layer->forward(this->_out, ctx);
+          this->_next_layer->forward(op::fully_connected_forward_kernel(
+                                         this->_in, this->_weight, this->_bias, this->_out, ctx),
+                                     ctx);
 
         return this->_out;
       }
