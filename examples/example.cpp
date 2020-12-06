@@ -1,3 +1,3 @@
-#include "../facilenn/facilenn.h"
+#include "../tino/tino.h"
 
-int main() { using namespace fnn; }
+int main() { using namespace tino; }

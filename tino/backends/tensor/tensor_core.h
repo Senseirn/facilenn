@@ -333,7 +333,7 @@ namespace ts {
 
     _internal_t shape() const { return D; }
 
-    _internal_t shape(const _internal_t d) const { return _dims[d - 1]; }
+    _internal_t shape(const _internal_t d) const { return _dims[d]; }
 
     const std::vector<_internal_t>& dims() const { return _dims; }
 
@@ -575,7 +575,7 @@ namespace ts {
 
     _internal_t shape() const { return 1; }
 
-    _internal_t shape(const _internal_t d) const { return _dims[d - 1]; }
+    _internal_t shape(const _internal_t d) const { return _dims[d]; }
 
     const std::vector<_internal_t>& dims() const { return _dims; }
 
@@ -694,6 +694,7 @@ namespace ts {
     void init(T* p, std::vector<_internal_t>& dims, std::vector<_internal_t>& strides) {
       _dim = dims[0];
       _p = p;
+      (void)strides;
     }
 
     inline T& operator[](const _internal_t i) {
@@ -1013,12 +1014,12 @@ namespace ts {
 
     _internal_t shape() const { return D; }
 
-    _internal_t shape(const _internal_t d) const { return _dims[d - 1]; }
+    _internal_t shape(const _internal_t d) const { return _dims[d]; }
 
     template <std::size_t _D,
-              typename std::enable_if<(_D <= D && _D >= 1), std::nullptr_t>::type = nullptr>
+              typename std::enable_if<(_D <= D && _D >= 0), std::nullptr_t>::type = nullptr>
     _internal_t shape() {
-      return _dims[_D - 1];
+      return _dims[_D];
     }
 
     const std::vector<_internal_t>& dims() const { return _dims; }
@@ -1318,7 +1319,7 @@ namespace ts {
 
     _internal_t shape() const { return 1; }
 
-    _internal_t shape(const _internal_t d) const { return _dims[d - 1]; }
+    _internal_t shape(const _internal_t d) const { return _dims[d]; }
 
     const std::vector<_internal_t>& dims() const { return _dims; }
 

@@ -1,10 +1,14 @@
 #pragma once
 
+#include <cassert>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
 
-namespace fnn {
+#include "tino/utils/macros.h"
+
+namespace tino {
   namespace utils {}
-} // namespace fnn
+} // namespace tino
