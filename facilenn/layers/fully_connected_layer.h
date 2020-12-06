@@ -66,7 +66,7 @@ namespace fnn {
                   e = (T)0;
               },
           std::size_t n_batch = 1) override {
-        if (!check_connection())
+        if (!this->check_connection())
           return false;
 
         this->_n_batch = n_batch;
@@ -86,21 +86,6 @@ namespace fnn {
 
       void set_optimizer(std::unique_ptr<abstract_optimizer<T>> optimizer) override {
         this->_optimizer = std::move(optimizer);
-      }
-
-      // TODO: implement
-      // check if prev layer and next layer are connectable to this layer.
-      bool check_connection() override {
-        if (!this->is_connected())
-          return false;
-
-        if (this->_prev_layer && this->_prev_layer->out().num_elements() != this->_in.num_elements())
-          return false;
-
-        if (this->_next_layer && this->_next_layer->in().num_elements() != this->_out.num_elements())
-          return false;
-
-        return true;
       }
 
       ~fully_connected_layer() {}

@@ -16,7 +16,7 @@ namespace fnn {
       using layer_t = abstract_layer<T>;
 
      protected:
-      // TODO: 基底クラスで定義しないようにする (使わないとき無駄になる && 初期化が面倒)
+      // TODO: can I make it better here?
       tensor2d<T> _in;
       tensor2d<T> _out;
       tensor2d<T> _bias;
@@ -34,6 +34,22 @@ namespace fnn {
       layer_t* _next_layer;
 
       layer_types _layer_type;
+
+     protected:
+      virtual bool is_connected() { return _prev_layer || _next_layer; }
+
+      virtual bool check_connection() {
+        if (!this->is_connected())
+          return false;
+
+        if (this->_prev_layer && this->_prev_layer->out().num_elements() != this->_in.num_elements())
+          return false;
+
+        if (this->_next_layer && this->_next_layer->in().num_elements() != this->_out.num_elements())
+          return false;
+
+        return true;
+      }
 
      public:
       abstract_layer(layer_types layer_type)
@@ -66,8 +82,7 @@ namespace fnn {
         _next_layer = next_layer;
       }
 
-      virtual bool is_connected() { return _prev_layer || _next_layer; }
-      virtual bool check_connection() = 0;
+      virtual bool is_ready() { return this->check_connection(); }
 
       virtual ~abstract_layer() {}
     };
