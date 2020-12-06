@@ -3,7 +3,7 @@
 int main() {
   using namespace tino;
   using namespace tino::layers;
-  using namespace core::optimizers;
+  using namespace tino::core;
 
   tino::network<float> net;
   net.add(new fully_connected_layer<float>(2, 4, sgd<float>(0.1)));

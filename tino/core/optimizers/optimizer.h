@@ -7,17 +7,17 @@
 namespace tino {
   namespace core {
     namespace optimizers {
-      enum class optimizers { abstract, sgd, momentum, adagrad, adam };
+      enum class optimizer_t { abstract, sgd, momentum, adagrad, adam };
 
       template <typename T>
       class abstract_optimizer {
        private:
-        optimizers _optimizer_type;
+        optimizer_t _optimizer_type;
 
        public:
-        abstract_optimizer(optimizers optimizer_type)
+        abstract_optimizer(optimizer_t optimizer_type)
         : _optimizer_type(optimizer_type) {}
-        virtual optimizers type() { return _optimizer_type; }
+        virtual optimizer_t type() { return _optimizer_type; }
         virtual void optimize(tensor2d<T>&, tensor2d<T>&, context&) = 0;
       };
 
@@ -27,7 +27,7 @@ namespace tino {
         const T _alpha; // learning rate
        public:
         sgd_optimizer(T alpha = 0.1)
-        : abstract_optimizer<T>(optimizers::sgd)
+        : abstract_optimizer<T>(optimizer_t::sgd)
         , _alpha(alpha) {}
 
         void optimize(tensor2d<T>& weight, tensor2d<T>& delta_weight, context& ctx) override {
