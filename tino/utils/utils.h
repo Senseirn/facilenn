@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#include "facilenn/utils/macros.h"
+#include "tino/utils/macros.h"
 
-namespace fnn {
+namespace tino {
   namespace utils {}
-} // namespace fnn
+} // namespace tino

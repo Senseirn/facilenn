@@ -1,14 +1,14 @@
 #pragma once
 
-#include "facilenn/backends/backends.h"
-#include "facilenn/core/context.h"
-#include "facilenn/utils/utils.h"
+#include "tino/backends/backends.h"
+#include "tino/core/context.h"
+#include "tino/utils/utils.h"
 
-namespace fnn {
+namespace tino {
   namespace core {
     namespace op {
-      using namespace fnn::core;
-      using namespace fnn::backends;
+      using namespace tino::core;
+      using namespace tino::backends;
 
       // forward declarations
       template <typename T>
@@ -58,7 +58,7 @@ namespace fnn {
           for (index_t j = 0; j < out.template shape<0>(); j++)
             out(i, j) += bias(0, j);
 
-        FNN_MAYBE_UNUSED(ctx);
+        TINO_MAYBE_UNUSED(ctx);
 
         return out;
       }
@@ -103,12 +103,12 @@ namespace fnn {
           for (index_t j = 0; j < delta_weight.template shape<0>(); j++)
             delta_weight(i, j) /= in.template shape<1>(); // div by n_batch.
 
-        FNN_MAYBE_UNUSED(delta_bias);
-        FNN_MAYBE_UNUSED(ctx);
+        TINO_MAYBE_UNUSED(delta_bias);
+        TINO_MAYBE_UNUSED(ctx);
 
         return delta;
       }
 
     } // namespace op
   }   // namespace core
-} // namespace fnn
+} // namespace tino

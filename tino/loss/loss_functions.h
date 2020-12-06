@@ -1,10 +1,10 @@
 #pragma once
 
-#include "facilenn/backends/backends.h"
-#include "facilenn/core/core.h"
-#include "facilenn/utils/utils.h"
+#include "tino/backends/backends.h"
+#include "tino/core/core.h"
+#include "tino/utils/utils.h"
 
-namespace fnn {
+namespace tino {
   namespace loss {
     template <typename T>
     class abstract_loss {};
@@ -21,7 +21,7 @@ namespace fnn {
           }
         }
 
-        FNN_MAYBE_UNUSED(ctx);
+        TINO_MAYBE_UNUSED(ctx);
 
         return loss;
       }
@@ -33,9 +33,9 @@ namespace fnn {
             error(i, j) = y(i, j) - t(i, j);
           }
         }
-        FNN_MAYBE_UNUSED(ctx);
+        TINO_MAYBE_UNUSED(ctx);
         return error;
       }
     }; // namespace loss
   }    // namespace loss
-} // namespace fnn
+} // namespace tino

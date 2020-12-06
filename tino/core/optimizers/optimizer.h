@@ -1,10 +1,10 @@
 #pragma once
 
-#include "facilenn/backends/backends.h"
-#include "facilenn/core/context.h"
-#include "facilenn/utils/utils.h"
+#include "tino/backends/backends.h"
+#include "tino/core/context.h"
+#include "tino/utils/utils.h"
 
-namespace fnn {
+namespace tino {
   namespace core {
     namespace optimizers {
       enum class optimizers { abstract, sgd, momentum, adagrad, adam };
@@ -36,10 +36,10 @@ namespace fnn {
             for (index_t j = 0; j < weight.template shape<0>(); j++)
               weight(i, j) -= _alpha * delta_weight(i, j);
 
-          FNN_MAYBE_UNUSED(ctx);
+          TINO_MAYBE_UNUSED(ctx);
         }
       };
 
     } // namespace optimizers
   }   // namespace core
-} // namespace fnn
+} // namespace tino

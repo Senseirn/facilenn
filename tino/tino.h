@@ -7,7 +7,7 @@
 #include "models/models.h"
 #include "utils/utils.h"
 
-namespace fnn {
+namespace tino {
   template <typename T>
   class network {
    private:
@@ -69,8 +69,8 @@ namespace fnn {
           for (auto& e : x)
             e = (float)0.1;
         }) {
-      using namespace fnn::core;
-      using namespace fnn::backends;
+      using namespace tino::core;
+      using namespace tino::backends;
       context ctx(backend_t::naive, stages::train);
 
       if (!_is_initialized) {
@@ -106,4 +106,4 @@ namespace fnn {
       return is_ready;
     }
   };
-} // namespace fnn
+} // namespace tino

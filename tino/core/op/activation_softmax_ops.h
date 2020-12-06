@@ -1,16 +1,16 @@
 #pragma once
 
-#include "facilenn/backends/backends.h"
-#include "facilenn/core/context.h"
-#include "facilenn/utils/utils.h"
+#include "tino/backends/backends.h"
+#include "tino/core/context.h"
+#include "tino/utils/utils.h"
 
 #include "cmath"
 
-namespace fnn {
+namespace tino {
   namespace core {
     namespace op {
-      using namespace fnn::core;
-      using namespace fnn::backends;
+      using namespace tino::core;
+      using namespace tino::backends;
 
       template <typename T>
       tensor2d<T>& softmax_activation_forward_kernel_naive(tensor2d<T>& in, tensor2d<T>& out, context& ctx);
@@ -48,7 +48,7 @@ namespace fnn {
           }
         }
 
-        FNN_MAYBE_UNUSED(ctx);
+        TINO_MAYBE_UNUSED(ctx);
 
         return out;
       }
@@ -68,14 +68,14 @@ namespace fnn {
                                                             tensor2d<T>& next_delta,
                                                             context& ctx) {
 
-        FNN_MAYBE_UNUSED(in);
-        FNN_MAYBE_UNUSED(delta);
-        FNN_MAYBE_UNUSED(next_delta);
-        FNN_MAYBE_UNUSED(ctx);
+        TINO_MAYBE_UNUSED(in);
+        TINO_MAYBE_UNUSED(delta);
+        TINO_MAYBE_UNUSED(next_delta);
+        TINO_MAYBE_UNUSED(ctx);
 
         return delta;
       }
 
     } // namespace op
   }   // namespace core
-} // namespace fnn
+} // namespace tino

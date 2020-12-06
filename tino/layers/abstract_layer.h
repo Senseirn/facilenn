@@ -1,10 +1,10 @@
 #pragma once
 
-#include "facilenn/backends/backends.h"
-#include "facilenn/layers/layer_types.h"
-#include "facilenn/utils/utils.h"
+#include "tino/backends/backends.h"
+#include "tino/layers/layer_types.h"
+#include "tino/utils/utils.h"
 
-namespace fnn {
+namespace tino {
   namespace layers {
     using namespace core;
     using namespace optimizers;
@@ -87,4 +87,4 @@ namespace fnn {
       virtual ~abstract_layer() {}
     };
   } // namespace layers
-} // namespace fnn
+} // namespace tino

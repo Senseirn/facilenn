@@ -1,9 +1,9 @@
 #pragma once
 
-#include "facilenn/core/optimizers/optimizer.h"
-#include "facilenn/utils/utils.h"
+#include "tino/core/optimizers/optimizer.h"
+#include "tino/utils/utils.h"
 
-namespace fnn {
+namespace tino {
   namespace layers {
     using namespace core;
     template <typename T>
@@ -11,4 +11,4 @@ namespace fnn {
       return std::make_unique<optimizers::sgd_optimizer<T>>(alpha);
     }
   } // namespace layers
-} // namespace fnn
+} // namespace tino

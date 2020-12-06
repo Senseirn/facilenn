@@ -1,9 +1,9 @@
 #pragma once
 
-#include "facilenn/backends/backend_types.h"
-#include "facilenn/utils/utils.h"
+#include "tino/backends/backend_types.h"
+#include "tino/utils/utils.h"
 
-namespace fnn {
+namespace tino {
   namespace core {
     enum class stages { train, infer };
     class context {
@@ -31,4 +31,4 @@ namespace fnn {
       }
     };
   } // namespace core
-} // namespace fnn
+} // namespace tino

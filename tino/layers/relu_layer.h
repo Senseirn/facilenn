@@ -1,12 +1,12 @@
 #pragma once
 
-#include "facilenn/core/op/activation_softmax_ops.h"
-#include "facilenn/layers/abstract_layer.h"
+#include "tino/core/op/activation_relu_ops.h"
+#include "tino/layers/abstract_layer.h"
 
-namespace fnn {
+namespace tino {
   namespace layers {
     template <typename T>
-    class softmax_layer : public abstract_layer<T> {
+    class relu_layer : public abstract_layer<T> {
       using layer_t = abstract_layer<T>;
 
      private:
@@ -20,38 +20,39 @@ namespace fnn {
       */
 
      public:
-      softmax_layer()
-      : abstract_layer<T>(layer_types::softmax) {}
+      relu_layer()
+      : abstract_layer<T>(layer_types::relu) {}
 
-      softmax_layer(std::size_t in_size, std::size_t out_size)
-      : abstract_layer<T>(in_size, out_size, layer_types::softmax) {}
+      relu_layer(std::size_t in_size, std::size_t out_size)
+      : abstract_layer<T>(in_size, out_size, layer_types::relu) {}
 
       tensor2d<T>& forward(tensor2d<T>& prev_out, core::context& ctx) override {
 
         // temporary return prev_out
         this->_in = std::move(prev_out);
 
+        TINO_MAYBE_UNUSED(ctx);
+
         if (!this->_next_layer)
-          this->_next_layer->forward(op::softmax_activation_forward_kernel(this->_in, this->_out, ctx), ctx);
+          this->_next_layer->forward(op::relu_activation_forward_kernel(this->_in, this->_out, ctx), ctx);
 
         return this->_out;
       }
 
       tensor2d<T>& backward(tensor2d<T>& next_delta, core::context& ctx) override {
-        FNN_MAYBE_UNUSED(next_delta);
-        FNN_MAYBE_UNUSED(ctx);
 
         if (!this->_prev_layer)
-          this->_prev_layer->backward(this->_delta, ctx);
+          this->_prev_layer->backward(op::relu_activation_backward_kernel(this->_in, this->_delta, next_delta, ctx),
+                                      ctx);
 
         return this->_delta;
       }
 
       tensor2d<T>& optimize(tensor2d<T>& next_delta, core::context& ctx) override {
-        FNN_MAYBE_UNUSED(next_delta);
-        FNN_MAYBE_UNUSED(ctx);
+        TINO_MAYBE_UNUSED(next_delta);
+        TINO_MAYBE_UNUSED(ctx);
 
-        return this->_weight;
+        return this->_delta;
       }
 
       bool initialize(
@@ -72,7 +73,7 @@ namespace fnn {
         this->_in.reshape(this->_n_batch, this->_in_size);
         this->_out.reshape(this->_n_batch, this->_out_size);
 
-        FNN_MAYBE_UNUSED(initializer);
+        TINO_MAYBE_UNUSED(initializer);
 
         return true;
       };
@@ -83,7 +84,7 @@ namespace fnn {
             }
       */
 
-      ~softmax_layer() {}
+      ~relu_layer() {}
     };
   } // namespace layers
-} // namespace fnn
+} // namespace tino

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "facilenn/backends/tensor/tensor_core.h"
+#include "tino/backends/tensor/tensor_core.h"
 
-namespace fnn {
+namespace tino {
   template <typename T>
   using tensor1d = ts::tensor<T, 1>;
   template <typename T>
@@ -13,4 +13,4 @@ namespace fnn {
 
   template <typename T>
   using tensor4d = ts::tensor<T, 4>;
-} // namespace fnn
+} // namespace tino

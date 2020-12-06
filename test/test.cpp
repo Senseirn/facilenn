@@ -1,11 +1,11 @@
-#include "../facilenn/facilenn.h"
+#include "../tino/tino.h"
 
 int main() {
-  using namespace fnn;
-  using namespace fnn::layers;
+  using namespace tino;
+  using namespace tino::layers;
   using namespace core::optimizers;
 
-  fnn::network<float> net;
+  tino::network<float> net;
   net.add(new fully_connected_layer<float>(2, 4, sgd<float>(0.1)));
   net.add(new relu_layer<float>());
   net.add(new fully_connected_layer<float>(4, 1));

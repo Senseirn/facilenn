@@ -1,9 +1,9 @@
 #pragma once
 
-#include "facilenn/core/op/op.h"
-#include "facilenn/layers/abstract_layer.h"
+#include "tino/core/op/op.h"
+#include "tino/layers/abstract_layer.h"
 
-namespace fnn {
+namespace tino {
   namespace layers {
 
     template <typename T>
@@ -54,7 +54,7 @@ namespace fnn {
       tensor2d<T>& optimize(tensor2d<T>& next_delta, core::context& ctx) override {
 
         _optimizer->optimize(this->_weight, this->_delta_weight, ctx);
-        FNN_MAYBE_UNUSED(next_delta);
+        TINO_MAYBE_UNUSED(next_delta);
 
         return this->_weight;
       }
@@ -91,4 +91,4 @@ namespace fnn {
       ~fully_connected_layer() {}
     };
   } // namespace layers
-} // namespace fnn
+} // namespace tino
