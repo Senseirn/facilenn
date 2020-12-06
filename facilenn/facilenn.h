@@ -3,6 +3,7 @@
 #include "backends/backends.h"
 #include "core/core.h"
 #include "layers/layers.h"
+#include "loss/loss.h"
 #include "models/models.h"
 #include "utils/utils.h"
 
@@ -33,8 +34,9 @@ namespace fnn {
       }
     }
 
-    void forward_prop(tensor2d<T>& input, tensor2d<T>& label, core::context& ctx) {
-      _net.front()->forward(input, label, ctx);
+    T forward_prop(tensor2d<T>& input, tensor2d<T>& label, core::context& ctx) {
+      _net.front()->forward(input, ctx);
+      return loss::mse<T>::f(_net.back()->out(), label, ctx);
     }
 
    public:
