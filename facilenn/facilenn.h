@@ -13,7 +13,29 @@ namespace fnn {
     std::vector<std::unique_ptr<layers::abstract_layer<T>>> _net;
     bool _is_initialized = false;
 
-    void forward_prop(tensor2d<T>& train_inputs, tensor2d<T>& train_labels, core::context& ctx) {}
+    void prepare_batched_data(tensor2d<T>& inputs,
+                              tensor2d<T>& labels,
+                              std::vector<tensor2d<T>>& batched_inputs,
+                              std::vector<tensor2d<T>>& batched_labels,
+                              std::size_t n_minibatchs) {
+      std::size_t batchs = inputs.template shape<1>() / n_minibatchs;
+      batched_inputs.resize(batchs);
+      batched_labels.resize(batchs);
+      for (std::size_t i = 0; i < batchs; i++) {
+        batched_inputs[i]->reshape(n_minibatchs, inputs.template shape<0>());
+        batched_labels[i]->reshape(n_minibatchs, labels.template shape<0>());
+        for (std::size_t j = 0; j < n_minibatchs; j++) {
+          for (std::size_t k = 0; k < inputs.template shape<0>(); k++)
+            batched_inputs[i](j, k) = inputs(i * n_minibatchs + j, k);
+          for (std::size_t k = 0; k < labels.template shape<0>(); k++)
+            batched_labels[i](j, k) = labels(i * n_minibatchs, k++);
+        }
+      }
+    }
+
+    void forward_prop(tensor2d<T>& input, tensor2d<T>& label, core::context& ctx) {
+      _net.front()->forward(input, label, ctx);
+    }
 
    public:
     void add(layers::abstract_layer<T>* layer) { _net.push_back(std::unique_ptr<layers::abstract_layer<T>>(layer)); }
@@ -34,10 +56,6 @@ namespace fnn {
       _is_initialized = is_ready();
 
       return _is_initialized;
-    }
-
-    void forward_prop(tensor2d<T>& train_inputs, tensor2d<T>& train_labels, std::size_t batch_idx, core::context& ctx) {
-      //_net.front()->forward()
     }
 
     void train(
@@ -68,19 +86,8 @@ namespace fnn {
         std::cout << "no supported minibatch size" << std::endl;
         return;
       }
-      std::size_t batchs = train_inputs.template shape<1>() / n_minibatchs;
-      train_inputs_batched.resize(batchs);
-      train_labels_batched.resize(batchs);
-      for (std::size_t i = 0; i < batchs; i++) {
-        train_inputs_batched[i]->reshape(n_minibatchs, train_inputs.template shape<0>());
-        train_labels_batched[i]->reshape(n_minibatchs, train_labels.template shape<0>());
-        for (std::size_t j = 0; j < n_minibatchs; j++) {
-          for (std::size_t k = 0; k < train_inputs.template shape<0>(); k++)
-            train_inputs_batched[i](j, k) = train_inputs(i * n_minibatchs + j, k);
-          for (std::size_t k = 0; k < train_labels.template shape<0>(); k++)
-            train_labels_batched[i](j, k) = train_labels(i * n_minibatchs, k++);
-        }
-      }
+      prepare_batched_data(train_inputs, train_labels, train_inputs_batched, train_labels_batched, n_minibatchs);
+      std::size_t batchs = train_inputs.size();
 
       for (std::size_t batch_idx = 0; batch_idx < batchs; batch_idx++) {
         for (int i = 0; i < (int)_net.size(); i++) {
