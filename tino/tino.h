@@ -75,11 +75,7 @@ namespace tino {
 
       if (!_is_initialized) {
         // weight initialize function
-        auto f = [](tensor2d<float>& x) {
-          for (auto& e : x)
-            e = (float)0.1;
-        };
-        initialize(n_minibatchs, f);
+        initialize(n_minibatchs, initializer);
       }
 
       // prepare input and label vectors
@@ -91,9 +87,11 @@ namespace tino {
       prepare_batched_data(train_inputs, train_labels, train_inputs_batched, train_labels_batched, n_minibatchs);
       std::size_t batchs = train_inputs.size();
 
-      for (std::size_t batch_idx = 0; batch_idx < batchs; batch_idx++) {
-        for (int i = 0; i < (int)_net.size(); i++) {
-          forward_prop(train_inputs_batched[i], train_labels_batched[i], ctx);
+      for (std::size_t epoch = 1; epoch <= n_epochs; epoch++) {
+        for (std::size_t batch_idx = 0; batch_idx < batchs; batch_idx++) {
+          for (int i = 0; i < (int)_net.size(); i++) {
+            forward_prop(train_inputs_batched[i], train_labels_batched[i], ctx);
+          }
         }
       }
     }

@@ -66,19 +66,12 @@ namespace ts {
   /*--- forward declarations ---*/
   template <typename T, std::size_t D, typename INTERNAL_TYPE = TENSOR_DEFAULT_INTERNAL_TYPE>
   struct tensor_extent;
-  template <typename T,
-            std::size_t D,
-            typename INTERNAL_TYPE = TENSOR_DEFAULT_INTERNAL_TYPE,
-            typename = void>
+  template <typename T, std::size_t D, typename INTERNAL_TYPE = TENSOR_DEFAULT_INTERNAL_TYPE, typename = void>
   class tensor;
   template <typename T, std::size_t D, typename INTERNAL_TYPE = TENSOR_DEFAULT_INTERNAL_TYPE>
   class tensor_view;
 
-  template <typename L,
-            typename Op,
-            typename R,
-            typename T,
-            typename ITYPE = TENSOR_DEFAULT_INTERNAL_TYPE>
+  template <typename L, typename Op, typename R, typename T, typename ITYPE = TENSOR_DEFAULT_INTERNAL_TYPE>
   class Expr;
 
   /*--- range check functions ---*/
@@ -92,8 +85,8 @@ namespace ts {
 
   template <typename T1,
             typename T2,
-            typename std::enable_if<std::is_integral<T1>::value && std::is_integral<T2>::value,
-                                    std::nullptr_t>::type = nullptr>
+            typename std::enable_if<std::is_integral<T1>::value && std::is_integral<T2>::value, std::nullptr_t>::type =
+                nullptr>
   void check_range(const T1 i, const T2 dim) {
     if (is_assert_enabled())
       if (unlikely(i < 0 || i >= dim)) {
@@ -102,12 +95,12 @@ namespace ts {
       }
   }
 
-  template <typename T1,
-            typename T2,
-            typename T3,
-            typename std::enable_if<std::is_integral<T1>::value && std::is_integral<T2>::value &&
-                                        std::is_integral<T3>::value,
-                                    std::nullptr_t>::type = nullptr>
+  template <
+      typename T1,
+      typename T2,
+      typename T3,
+      typename std::enable_if<std::is_integral<T1>::value && std::is_integral<T2>::value && std::is_integral<T3>::value,
+                              std::nullptr_t>::type = nullptr>
   void check_range(const T1 i, const T2 dim, const T3 D) {
     if (is_assert_enabled())
       if (unlikely(i < 0 || i >= dim)) {
@@ -201,8 +194,7 @@ namespace ts {
       const auto size_diff = dims.size() - D;
       std::copy(std::begin(dims), std::end(dims) - size_diff, std::begin(_dims));
       std::copy(std::begin(strides), std::end(strides) - size_diff, std::begin(_strides));
-      _num_elements =
-          std::accumulate(std::begin(_dims), std::end(_dims), 1, std::multiplies<int>());
+      _num_elements = std::accumulate(std::begin(_dims), std::end(_dims), 1, std::multiplies<int>());
       _extents.init(_data, _dims, _strides);
     }
 
@@ -243,8 +235,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor_view& operator=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: different num of elements" << std::endl;
       }
@@ -256,8 +247,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor_view& operator+=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: different num of elements" << std::endl;
       }
@@ -269,8 +259,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor_view& operator-=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: different num of elements" << std::endl;
       }
@@ -282,8 +271,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor_view& operator/=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: different num of elements" << std::endl;
       }
@@ -295,8 +283,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor_view& operator*=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: different num of elements" << std::endl;
       }
@@ -448,6 +435,7 @@ namespace ts {
       _num_elements = dims[0];
       _dims[0] = _num_elements;
       _strides[0] = 1;
+      (void)strides;
     }
 
     tensor_view(const tensor_view& src)
@@ -483,8 +471,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor_view& operator=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: different num of elements" << std::endl;
       }
@@ -496,8 +483,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor_view& operator+=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: different num of elements" << std::endl;
       }
@@ -509,8 +495,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor_view& operator-=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: different num of elements" << std::endl;
       }
@@ -522,8 +507,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor_view& operator/=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: different num of elements" << std::endl;
       }
@@ -535,8 +519,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor_view& operator*=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: different num of elements" << std::endl;
       }
@@ -679,7 +662,9 @@ namespace ts {
     tensor_extent()
     : _p(nullptr) {}
     tensor_extent(T* p, _internal_t stride)
-    : _p(p) {}
+    : _p(p) {
+      (void)stride;
+    }
 
     tensor_extent<T, 1, _internal_t>& calc_index(const _internal_t accum) {
       _accum = accum;
@@ -712,8 +697,8 @@ namespace ts {
   class tensor<T,
                D,
                INTERNAL_TYPE,
-               typename std::enable_if<std::is_arithmetic<T>::value || std::is_pointer<T>::value,
-                                       void>::type> : public tensor_internal {
+               typename std::enable_if<std::is_arithmetic<T>::value || std::is_pointer<T>::value, void>::type>
+  : public tensor_internal {
    public:
     typedef INTERNAL_TYPE _internal_t;
 
@@ -816,8 +801,7 @@ namespace ts {
     : _data(nullptr)
     , _dims(D)
     , _strides(D) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       _num_elements = rhs.num_elements();
       // _data = new T[_num_elements];
       _data = aligned_alloc<T>(_num_elements);
@@ -860,8 +844,7 @@ namespace ts {
     /*! EXPERIMNET */
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor& operator=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: num of elements miss-matched!" << std::endl;
         std::exit(1);
@@ -874,8 +857,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor& operator+=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: num of elements miss-matched!" << std::endl;
         std::exit(1);
@@ -887,8 +869,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor& operator-=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: num of elements miss-matched!" << std::endl;
         std::exit(1);
@@ -900,8 +881,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor& operator/=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: num of elements miss-matched!" << std::endl;
         std::exit(1);
@@ -913,8 +893,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor& operator*=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: num of elements miss-matched!" << std::endl;
         std::exit(1);
@@ -956,8 +935,7 @@ namespace ts {
         std::cerr << "error: 0 is not permitted as a size of dimension" << std::endl;
         std::exit(1);
       }
-      _num_elements =
-          std::accumulate(std::begin(shapes), std::end(shapes), 1, std::multiplies<int>());
+      _num_elements = std::accumulate(std::begin(shapes), std::end(shapes), 1, std::multiplies<int>());
       std::copy(std::begin(shapes), std::end(shapes), std::begin(_dims));
       std::reverse(std::begin(_dims), std::end(_dims));
       _strides[D - 1] = _num_elements / _dims[D - 1];
@@ -988,8 +966,7 @@ namespace ts {
         std::cerr << "error: 0 is not permitted as a size of dimension" << std::endl;
         std::exit(1);
       }
-      auto num_elements =
-          std::accumulate(std::begin(shapes), std::end(shapes), 1, std::multiplies<int>());
+      auto num_elements = std::accumulate(std::begin(shapes), std::end(shapes), 1, std::multiplies<int>());
       if ((int)_num_elements != num_elements) {
         std::cerr << "error: num. of elements miss-match" << std::endl;
         std::exit(1);
@@ -1016,8 +993,7 @@ namespace ts {
 
     _internal_t shape(const _internal_t d) const { return _dims[d]; }
 
-    template <std::size_t _D,
-              typename std::enable_if<(_D <= D && _D >= 0), std::nullptr_t>::type = nullptr>
+    template <std::size_t _D, typename std::enable_if<(_D <= D && _D >= 0), std::nullptr_t>::type = nullptr>
     _internal_t shape() {
       return _dims[_D];
     }
@@ -1110,8 +1086,8 @@ namespace ts {
   class tensor<T,
                1,
                INTERNAL_TYPE,
-               typename std::enable_if<std::is_arithmetic<T>::value || std::is_pointer<T>::value,
-                                       void>::type> : public tensor_internal {
+               typename std::enable_if<std::is_arithmetic<T>::value || std::is_pointer<T>::value, void>::type>
+  : public tensor_internal {
    public:
     typedef INTERNAL_TYPE _internal_t;
     typedef T value_type;
@@ -1190,8 +1166,7 @@ namespace ts {
     : _data(nullptr)
     , _dims(1)
     , _strides(1) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       _num_elements = rhs.num_elements();
       //_data = new T[_num_elements];
       _data = aligned_alloc<T>(_num_elements);
@@ -1228,8 +1203,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor& operator=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: num of elements miss-matched!" << std::endl;
         std::exit(1);
@@ -1241,8 +1215,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor& operator+=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: num of elements miss-matched!" << std::endl;
         std::exit(1);
@@ -1254,8 +1227,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor& operator-=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: num of elements miss-matched!" << std::endl;
         std::exit(1);
@@ -1267,8 +1239,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor& operator/=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: num of elements miss-matched!" << std::endl;
         std::exit(1);
@@ -1280,8 +1251,7 @@ namespace ts {
 
     template <typename L, typename Op, typename R, typename ITYPE>
     tensor& operator*=(const Expr<L, Op, R, value_type, ITYPE>& rhs) {
-      static_assert(std::is_same<_internal_t, ITYPE>::value,
-                    "tensor assignment error: different internal type");
+      static_assert(std::is_same<_internal_t, ITYPE>::value, "tensor assignment error: different internal type");
       if (rhs.num_elements() != num_elements()) {
         std::cerr << "tensor assignment error: num of elements miss-matched!" << std::endl;
         std::exit(1);
@@ -1391,8 +1361,7 @@ namespace ts {
 
     template <typename LL = L,
               typename RR = R,
-              typename std::enable_if<(std::is_base_of<tensor_internal, LL>::value &&
-                                       std::is_arithmetic<RR>::value),
+              typename std::enable_if<(std::is_base_of<tensor_internal, LL>::value && std::is_arithmetic<RR>::value),
                                       std::nullptr_t>::type = nullptr>
     Expr(const L& lhs, const R& rhs)
     : _lhs(lhs)
@@ -1403,8 +1372,7 @@ namespace ts {
 
     template <typename LL = L,
               typename RR = R,
-              typename std::enable_if<(std::is_base_of<tensor_internal, RR>::value &&
-                                       std::is_arithmetic<LL>::value),
+              typename std::enable_if<(std::is_base_of<tensor_internal, RR>::value && std::is_arithmetic<LL>::value),
                                       std::nullptr_t>::type = nullptr>
     Expr(const L& lhs, const R& rhs)
     : _lhs(lhs)
@@ -1436,30 +1404,24 @@ namespace ts {
 
     template <typename LL = L,
               typename RR = R,
-              typename std::enable_if<std::is_base_of<tensor_internal, LL>::value,
-                                      std::nullptr_t>::type = nullptr,
-              typename std::enable_if<std::is_base_of<tensor_internal, RR>::value,
-                                      std::nullptr_t>::type = nullptr>
+              typename std::enable_if<std::is_base_of<tensor_internal, LL>::value, std::nullptr_t>::type = nullptr,
+              typename std::enable_if<std::is_base_of<tensor_internal, RR>::value, std::nullptr_t>::type = nullptr>
     T eval(const int i) const {
       return Op::apply(_lhs.eval(i), _rhs.eval(i));
     }
 
-    template <
-        typename LL = L,
-        typename RR = R,
-        typename std::enable_if<std::is_arithmetic<LL>::value, std::nullptr_t>::type = nullptr,
-        typename std::enable_if<std::is_base_of<tensor_internal, RR>::value, std::nullptr_t>::type =
-            nullptr>
+    template <typename LL = L,
+              typename RR = R,
+              typename std::enable_if<std::is_arithmetic<LL>::value, std::nullptr_t>::type = nullptr,
+              typename std::enable_if<std::is_base_of<tensor_internal, RR>::value, std::nullptr_t>::type = nullptr>
     T eval(const int i) const {
       return Op::apply((T)_lhs, _rhs.eval(i));
     }
 
-    template <
-        typename LL = L,
-        typename RR = R,
-        typename std::enable_if<std::is_arithmetic<RR>::value, std::nullptr_t>::type = nullptr,
-        typename std::enable_if<std::is_base_of<tensor_internal, LL>::value, std::nullptr_t>::type =
-            nullptr>
+    template <typename LL = L,
+              typename RR = R,
+              typename std::enable_if<std::is_arithmetic<RR>::value, std::nullptr_t>::type = nullptr,
+              typename std::enable_if<std::is_base_of<tensor_internal, LL>::value, std::nullptr_t>::type = nullptr>
     T eval(const int i) const {
       return Op::apply(_lhs.eval(i), (T)_rhs);
     }
@@ -1508,15 +1470,12 @@ namespace ts {
   */
 
   /* Plus */
-  template <
-      typename L,
-      typename R,
-      typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type =
-          nullptr,
-      typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type =
-          nullptr,
-      typename std::enable_if<std::is_same<typename L::_internal_t, typename R::_internal_t>::value,
-                              std::nullptr_t>::type = nullptr>
+  template <typename L,
+            typename R,
+            typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type = nullptr,
+            typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type = nullptr,
+            typename std::enable_if<std::is_same<typename L::_internal_t, typename R::_internal_t>::value,
+                                    std::nullptr_t>::type = nullptr>
   Expr<L, Plus, R, typename L::value_type> operator+(const L& lhs, const R& rhs) {
     return Expr<L, Plus, R, typename L::value_type, typename L::_internal_t>(lhs, rhs);
   }
@@ -1524,8 +1483,7 @@ namespace ts {
   template <typename L,
             typename R,
             typename std::enable_if<std::is_arithmetic<L>::value, std::nullptr_t>::type = nullptr,
-            typename std::enable_if<std::is_base_of<tensor_internal, R>::value,
-                                    std::nullptr_t>::type = nullptr>
+            typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type = nullptr>
   Expr<L, Plus, R, typename R::value_type> operator+(const L& lhs, const R& rhs) {
     return Expr<L, Plus, R, typename R::value_type, typename R::_internal_t>(lhs, rhs);
   }
@@ -1533,22 +1491,18 @@ namespace ts {
   template <typename L,
             typename R,
             typename std::enable_if<std::is_arithmetic<R>::value, std::nullptr_t>::type = nullptr,
-            typename std::enable_if<std::is_base_of<tensor_internal, L>::value,
-                                    std::nullptr_t>::type = nullptr>
+            typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type = nullptr>
   Expr<L, Plus, R, typename L::value_type> operator+(const L& lhs, const R& rhs) {
     return Expr<L, Plus, R, typename L::value_type, typename L::_internal_t>(lhs, rhs);
   }
 
   /* Minus */
-  template <
-      typename L,
-      typename R,
-      typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type =
-          nullptr,
-      typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type =
-          nullptr,
-      typename std::enable_if<std::is_same<typename L::_internal_t, typename R::_internal_t>::value,
-                              std::nullptr_t>::type = nullptr>
+  template <typename L,
+            typename R,
+            typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type = nullptr,
+            typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type = nullptr,
+            typename std::enable_if<std::is_same<typename L::_internal_t, typename R::_internal_t>::value,
+                                    std::nullptr_t>::type = nullptr>
   Expr<L, Minus, R, typename L::value_type> operator-(const L& lhs, const R& rhs) {
     return Expr<L, Minus, R, typename L::value_type, typename L::_internal_t>(lhs, rhs);
   }
@@ -1556,8 +1510,7 @@ namespace ts {
   template <typename L,
             typename R,
             typename std::enable_if<std::is_arithmetic<L>::value, std::nullptr_t>::type = nullptr,
-            typename std::enable_if<std::is_base_of<tensor_internal, R>::value,
-                                    std::nullptr_t>::type = nullptr>
+            typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type = nullptr>
   Expr<L, Minus, R, typename R::value_type> operator-(const L& lhs, const R& rhs) {
     return Expr<L, Minus, R, typename R::value_type, typename R::_internal_t>(lhs, rhs);
   }
@@ -1565,22 +1518,18 @@ namespace ts {
   template <typename L,
             typename R,
             typename std::enable_if<std::is_arithmetic<R>::value, std::nullptr_t>::type = nullptr,
-            typename std::enable_if<std::is_base_of<tensor_internal, L>::value,
-                                    std::nullptr_t>::type = nullptr>
+            typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type = nullptr>
   Expr<L, Minus, R, typename L::value_type> operator-(const L& lhs, const R& rhs) {
     return Expr<L, Minus, R, typename L::value_type, typename L::internal_t>(lhs, rhs);
   }
 
   /* Div*/
-  template <
-      typename L,
-      typename R,
-      typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type =
-          nullptr,
-      typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type =
-          nullptr,
-      typename std::enable_if<std::is_same<typename L::_internal_t, typename R::_internal_t>::value,
-                              std::nullptr_t>::type = nullptr>
+  template <typename L,
+            typename R,
+            typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type = nullptr,
+            typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type = nullptr,
+            typename std::enable_if<std::is_same<typename L::_internal_t, typename R::_internal_t>::value,
+                                    std::nullptr_t>::type = nullptr>
   Expr<L, Div, R, typename L::value_type> operator/(const L& lhs, const R& rhs) {
     return Expr<L, Div, R, typename L::value_type, typename L::_internal_t>(lhs, rhs);
   }
@@ -1588,8 +1537,7 @@ namespace ts {
   template <typename L,
             typename R,
             typename std::enable_if<std::is_arithmetic<L>::value, std::nullptr_t>::type = nullptr,
-            typename std::enable_if<std::is_base_of<tensor_internal, R>::value,
-                                    std::nullptr_t>::type = nullptr>
+            typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type = nullptr>
   Expr<L, Div, R, typename R::value_type> operator/(const L& lhs, const R& rhs) {
     return Expr<L, Div, R, typename R::value_type, typename R::_internal_t>(lhs, rhs);
   }
@@ -1597,22 +1545,18 @@ namespace ts {
   template <typename L,
             typename R,
             typename std::enable_if<std::is_arithmetic<R>::value, std::nullptr_t>::type = nullptr,
-            typename std::enable_if<std::is_base_of<tensor_internal, L>::value,
-                                    std::nullptr_t>::type = nullptr>
+            typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type = nullptr>
   Expr<L, Div, R, typename L::value_type> operator/(const L& lhs, const R& rhs) {
     return Expr<L, Div, R, typename L::value_type, typename L::_internal_t>(lhs, rhs);
   }
 
   /* Mul */
-  template <
-      typename L,
-      typename R,
-      typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type =
-          nullptr,
-      typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type =
-          nullptr,
-      typename std::enable_if<std::is_same<typename L::_internal_t, typename R::_internal_t>::value,
-                              std::nullptr_t>::type = nullptr>
+  template <typename L,
+            typename R,
+            typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type = nullptr,
+            typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type = nullptr,
+            typename std::enable_if<std::is_same<typename L::_internal_t, typename R::_internal_t>::value,
+                                    std::nullptr_t>::type = nullptr>
   Expr<L, Mul, R, typename L::value_type> operator*(const L& lhs, const R& rhs) {
     return Expr<L, Mul, R, typename L::value_type, typename L::_internal_t>(lhs, rhs);
   }
@@ -1620,8 +1564,7 @@ namespace ts {
   template <typename L,
             typename R,
             typename std::enable_if<std::is_arithmetic<L>::value, std::nullptr_t>::type = nullptr,
-            typename std::enable_if<std::is_base_of<tensor_internal, R>::value,
-                                    std::nullptr_t>::type = nullptr>
+            typename std::enable_if<std::is_base_of<tensor_internal, R>::value, std::nullptr_t>::type = nullptr>
   Expr<L, Mul, R, typename R::value_type> operator*(const L& lhs, const R& rhs) {
     return Expr<L, Mul, R, typename R::value_type, typename R::_internal_t>(lhs, rhs);
   }
@@ -1629,8 +1572,7 @@ namespace ts {
   template <typename L,
             typename R,
             typename std::enable_if<std::is_arithmetic<R>::value, std::nullptr_t>::type = nullptr,
-            typename std::enable_if<std::is_base_of<tensor_internal, L>::value,
-                                    std::nullptr_t>::type = nullptr>
+            typename std::enable_if<std::is_base_of<tensor_internal, L>::value, std::nullptr_t>::type = nullptr>
   Expr<L, Mul, R, typename L::value_type> operator*(const L& lhs, const R& rhs) {
     return Expr<L, Mul, R, typename L::value_type, typename L::_internal_t>(lhs, rhs);
   }

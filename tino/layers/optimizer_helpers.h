@@ -8,7 +8,8 @@ namespace tino {
     using namespace core;
     template <typename T>
     std::unique_ptr<core::optimizers::abstract_optimizer<T>> sgd(T alpha = 0.1) {
-      return std::make_unique<optimizers::sgd_optimizer<T>>(alpha);
+      TINO_MAYBE_UNUSED(alpha);
+      return std::make_unique<core::optimizers::sgd_optimizer<T>>(alpha);
     }
   } // namespace layers
 } // namespace tino
