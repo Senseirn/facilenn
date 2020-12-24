@@ -1,3 +1,6 @@
 [submodule "test/iutest"]
 	path = test/iutest
 	url = https://github.com/srz-zumix/iutest
+[submodule "tino/backends/tensor"]
+	path = tino/backends/tensor
+	url = https://github.com/Senseirn/tensor.git
