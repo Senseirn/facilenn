@@ -50,9 +50,11 @@ namespace tino {
 
         using index_t = std::size_t;
         for (index_t i = 0; i < in.template shape<1>(); i++)
-          for (index_t j = 0; j < weight.template shape<1>(); j++)
-            for (index_t k = 0; k < in.template shape<0>(); k++)
-              out(i, j) += in(i, k) * weight(k, j);
+          for (index_t j = 0; j < weight.template shape<0>(); j++)
+            for (index_t k = 0; k < in.template shape<0>(); k++) {
+              out.data()[i * out.template shape<0>() + j] +=
+                  in.data()[i * in.template shape<0>() + k] * weight.data()[k * weight.template shape<0>() + j];
+            }
 
         for (index_t i = 0; i < out.template shape<1>(); i++)
           for (index_t j = 0; j < out.template shape<0>(); j++)

@@ -30,8 +30,8 @@ namespace tino {
       std::size_t _n_batch;
 
       /* DO NOT delete these pointers in destructor! */
-      layer_t* _prev_layer;
-      layer_t* _next_layer;
+      layer_t* _prev_layer = nullptr;
+      layer_t* _next_layer = nullptr;
 
       layer_types _layer_type;
 

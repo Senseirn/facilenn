@@ -29,10 +29,12 @@ namespace tino {
       tensor2d<T>& forward(tensor2d<T>& prev_out, core::context& ctx) override {
 
         // temporary return prev_out
-        this->_in = std::move(prev_out);
+        this->_in = prev_out;
 
-        if (!this->_next_layer)
+        if (this->_next_layer)
           this->_next_layer->forward(op::softmax_activation_forward_kernel(this->_in, this->_out, ctx), ctx);
+        else
+          op::softmax_activation_forward_kernel(this->_in, this->_out, ctx);
 
         return this->_out;
       }
@@ -61,7 +63,7 @@ namespace tino {
                   e = (T)0;
               },
           std::size_t n_batch = 1) override {
-        if (!this->check_connection())
+        if (!this->is_connected())
           return false;
 
         auto& out = this->_prev_layer->out();
