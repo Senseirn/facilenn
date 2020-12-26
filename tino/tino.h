@@ -87,6 +87,7 @@ namespace tino {
         initialize(_weight_initializer, n_batchsize);
       }
 
+      // set optimizer for each layer
       set_optimizer_each_layer(optimizer);
 
       // prepare input and label vectors

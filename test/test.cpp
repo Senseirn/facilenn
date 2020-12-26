@@ -14,7 +14,6 @@ int main() {
   net.add(new relu_layer());
   net.add(new fully_connected_layer(16, 1));
   net.add(new relu_layer());
-  //  net.initialize();
 
   // define how to initialize weights
   net.weight_initializer([](tensor2d<float>& x) {
@@ -30,14 +29,13 @@ int main() {
   optimizers::SGD sgd;
   sgd.alpha(0.2);
 
-  tensor2d<float> train_inputs(1000, 2);
-  tensor2d<float> train_labels(1000, 1);
-  xor_generator generator;
-  generator.generate(train_inputs, train_labels);
-
+  // run 10 epochs with batch_size=10
   int n_epochs = 10;
-  int n_minibatchs = 10;
+  int n_batchsize = 10;
+
+  // generate xor dataset which contains 1,000 pairs of input and label
+  xor_generator generator(1000);
 
   // run train
-  net.train(train_inputs, train_labels, n_epochs, n_minibatchs, sgd);
+  net.train(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, sgd);
 }
