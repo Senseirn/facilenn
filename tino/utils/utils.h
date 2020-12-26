@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "tino/utils/datasets/xor.h"
 #include "tino/utils/macros.h"
 
 namespace tino {

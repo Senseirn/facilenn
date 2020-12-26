@@ -29,12 +29,14 @@ namespace tino {
       tensor2d<T>& forward(tensor2d<T>& prev_out, core::context& ctx) override {
 
         // temporary return prev_out
-        this->_in = std::move(prev_out);
+        this->_in = prev_out;
 
         TINO_MAYBE_UNUSED(ctx);
 
-        if (!this->_next_layer)
+        if (this->_next_layer)
           this->_next_layer->forward(op::relu_activation_forward_kernel(this->_in, this->_out, ctx), ctx);
+        else
+          op::relu_activation_forward_kernel(this->_in, this->_out, ctx);
 
         return this->_out;
       }
@@ -44,13 +46,23 @@ namespace tino {
         if (!this->_prev_layer)
           this->_prev_layer->backward(op::relu_activation_backward_kernel(this->_in, this->_delta, next_delta, ctx),
                                       ctx);
+        else {
+          using index_t = typename tensor2d<T>::index_t;
+          for (index_t i = 0; i < next_delta.template shape<1>(); i++)
+            for (index_t j = 0; j < next_delta.template shape<0>(); j++)
+              this->_delta(i, j) = this->_out(i, j) - next_delta(i, j);
 
+          this->_prev_layer->backward(this->_delta, ctx);
+        }
+        optimize(next_delta, ctx);
         return this->_delta;
       }
 
       tensor2d<T>& optimize(tensor2d<T>& next_delta, core::context& ctx) override {
         TINO_MAYBE_UNUSED(next_delta);
         TINO_MAYBE_UNUSED(ctx);
+
+        this->_prev_layer->optimize(this->_delta, ctx);
 
         return this->_delta;
       }
@@ -62,7 +74,7 @@ namespace tino {
                   e = (T)0;
               },
           std::size_t n_batch = 1) override {
-        if (!this->check_connection())
+        if (!this->is_connected())
           return false;
 
         auto& out = this->_prev_layer->out();
@@ -72,6 +84,7 @@ namespace tino {
         this->_n_batch = n_batch;
         this->_in.reshape(this->_n_batch, this->_in_size);
         this->_out.reshape(this->_n_batch, this->_out_size);
+        this->_delta.reshape(this->_n_batch, this->_out_size);
 
         TINO_MAYBE_UNUSED(initializer);
 

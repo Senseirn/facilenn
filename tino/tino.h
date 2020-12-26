@@ -23,24 +23,25 @@ namespace tino {
       batched_inputs.resize(batchs);
       batched_labels.resize(batchs);
       for (std::size_t i = 0; i < batchs; i++) {
-        batched_inputs[i]->reshape(n_minibatchs, inputs.template shape<0>());
-        batched_labels[i]->reshape(n_minibatchs, labels.template shape<0>());
+        batched_inputs[i].reshape(n_minibatchs, inputs.template shape<0>());
+        batched_labels[i].reshape(n_minibatchs, labels.template shape<0>());
         for (std::size_t j = 0; j < n_minibatchs; j++) {
           for (std::size_t k = 0; k < inputs.template shape<0>(); k++)
             batched_inputs[i](j, k) = inputs(i * n_minibatchs + j, k);
           for (std::size_t k = 0; k < labels.template shape<0>(); k++)
-            batched_labels[i](j, k) = labels(i * n_minibatchs, k++);
+            batched_labels[i](j, k) = labels(i * n_minibatchs + j, k);
         }
       }
     }
 
-    T forward_prop(tensor2d<T>& input, tensor2d<T>& label, core::context& ctx) {
-      _net.front()->forward(input, ctx);
-      return loss::mse<T>::f(_net.back()->out(), label, ctx);
-    }
+    T calc_loss(tensor2d<T>& label, core::context& ctx) { return loss::mse<T>::f(_net.back()->out(), label, ctx); }
+
+    void forward(tensor2d<T>& input, core::context& ctx) { _net.front()->forward(input, ctx); }
+
+    void backward(tensor2d<T>& label, core::context& ctx) { _net.back()->backward(label, ctx); }
 
    public:
-    void add(layers::abstract_layer<T>* layer) { _net.push_back(std::unique_ptr<layers::abstract_layer<T>>(layer)); }
+    void add(layers::abstract_layer<T>* layer) { _net.emplace_back(layer); }
 
     bool initialize(
         std::size_t n_batch = 1,
@@ -48,26 +49,28 @@ namespace tino {
           for (auto& e : x)
             e = (float)0.1;
         }) {
-      for (auto& l : _net)
-        l->initialize(initializer, n_batch);
 
       for (int i = 0; i < (int)_net.size(); i++)
         _net[i]->make_connection(i == 0 ? nullptr : _net[i - 1].get(),
                                  i == (int)_net.size() - 1 ? nullptr : _net[i + 1].get());
 
+      for (auto& l : _net) {
+        l->initialize(initializer, n_batch);
+      }
       _is_initialized = is_ready();
 
       return _is_initialized;
     }
 
+    template <typename F>
     void train(
         tensor2d<T>& train_inputs,
         tensor2d<T>& train_labels,
         std::size_t n_epochs,
         std::size_t n_minibatchs = 1,
-        std::function<void(tensor2d<float>&)> initializer = [](tensor2d<float>& x) {
+        F initializer = [](tensor2d<float>& x) {
           for (auto& e : x)
-            e = (float)0.1;
+            e = (float)0.01;
         }) {
       using namespace tino::core;
       using namespace tino::backends;
@@ -85,14 +88,21 @@ namespace tino {
         return;
       }
       prepare_batched_data(train_inputs, train_labels, train_inputs_batched, train_labels_batched, n_minibatchs);
-      std::size_t batchs = train_inputs.size();
+      std::size_t batchs = train_inputs.template shape<1>() / n_minibatchs;
 
       for (std::size_t epoch = 1; epoch <= n_epochs; epoch++) {
+        std::cout << "epoch: " << epoch << std::endl;
+        T loss = 0;
         for (std::size_t batch_idx = 0; batch_idx < batchs; batch_idx++) {
-          for (int i = 0; i < (int)_net.size(); i++) {
-            forward_prop(train_inputs_batched[i], train_labels_batched[i], ctx);
-          }
+          forward(train_inputs_batched[batch_idx], ctx);
+          loss += calc_loss(train_labels_batched[batch_idx], ctx);
+          backward(train_labels_batched[batch_idx], ctx);
+
+          // std::cout << batch_idx << ": input: " << train_inputs_batched//[batch_idx](0, 0) << " "
+          //           << train_inputs_batched[batch_idx](0, 1) << " " << train_labels_batched[batch_idx](0, 0) << " "
+          //          << _net.back()->out()(0, 0) << " " << loss << std::endl;
         }
+        std::cout << "loss: " << loss / (batchs * train_inputs_batched[0].template shape<1>()) << std::endl;
       }
     }
 
@@ -103,5 +113,7 @@ namespace tino {
 
       return is_ready;
     }
+
+    ~network() {}
   };
 } // namespace tino

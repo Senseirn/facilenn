@@ -31,9 +31,12 @@ namespace tino {
       , _optimizer(std::move(optimizer)) {}
 
       tensor2d<T>& forward(tensor2d<T>& prev_out, core::context& ctx) override {
-        this->_in = std::move(prev_out);
+        if (this->_prev_layer)
+          this->_in = prev_out;
+        else
+          this->_in = prev_out;
 
-        if (!this->_next_layer)
+        if (this->_next_layer)
           this->_next_layer->forward(
               op::fully_connected_forward_kernel(this->_in, this->_weight, this->_bias, this->_out, ctx), ctx);
 
@@ -47,6 +50,9 @@ namespace tino {
               op::fully_connected_backward_kernel(
                   this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx),
               ctx);
+        else
+          op::fully_connected_backward_kernel(
+              this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx);
 
         return this->_delta;
       }
@@ -55,6 +61,9 @@ namespace tino {
 
         _optimizer->optimize(this->_weight, this->_delta_weight, ctx);
         TINO_MAYBE_UNUSED(next_delta);
+
+        if (!this->_prev_layer)
+          this->_prev_layer->optimize(this->_delta, ctx);
 
         return this->_weight;
       }
@@ -66,7 +75,8 @@ namespace tino {
                   e = (T)0;
               },
           std::size_t n_batch = 1) override {
-        if (!this->check_connection())
+
+        if (!this->is_connected())
           return false;
 
         this->_n_batch = n_batch;
@@ -74,7 +84,7 @@ namespace tino {
         this->_weight.reshape(this->_in_size, this->_out_size);
         this->_bias.reshape(1, this->_out_size);
         this->_out.reshape(this->_n_batch, this->_out_size);
-        this->_delta.reshape(this->_in_size, this->_out_size);
+        this->_delta.reshape(this->_n_batch, this->_in_size);
         this->_delta_weight.reshape(this->_in_size, this->_out_size);
         this->_delta_bias.reshape(1, this->_out_size);
 
