@@ -34,15 +34,11 @@ namespace tino {
       }
     }
 
-    T forward_prop(tensor2d<T>& input, tensor2d<T>& label, core::context& ctx) {
-      _net.front()->forward(input, ctx);
-      return loss::mse<T>::f(_net.back()->out(), label, ctx);
-    }
+    T calc_loss(tensor2d<T>& label, core::context& ctx) { return loss::mse<T>::f(_net.back()->out(), label, ctx); }
 
-    void backward_prop(tensor2d<T>& label, core::context& ctx) {
-      _net.back()->backward(label, ctx);
-      // return loss::mse<T>::f(_net.back()->out(), label, ctx);
-    }
+    void forward(tensor2d<T>& input, core::context& ctx) { _net.front()->forward(input, ctx); }
+
+    void backward(tensor2d<T>& label, core::context& ctx) { _net.back()->backward(label, ctx); }
 
    public:
     void add(layers::abstract_layer<T>* layer) { _net.emplace_back(layer); }
@@ -95,15 +91,17 @@ namespace tino {
 
       for (std::size_t epoch = 1; epoch <= n_epochs; epoch++) {
         std::cout << "epoch: " << epoch << std::endl;
+        T loss = 0;
         for (std::size_t batch_idx = 0; batch_idx < batchs; batch_idx++) {
+          forward(train_inputs_batched[batch_idx], ctx);
+          loss += calc_loss(train_labels_batched[batch_idx], ctx);
+          backward(train_labels_batched[batch_idx], ctx);
 
-          auto loss = forward_prop(train_inputs_batched[batch_idx], train_labels_batched[batch_idx], ctx);
-          backward_prop(train_labels_batched[batch_idx], ctx);
-
-          std::cout << batch_idx << ": input: " << train_inputs_batched[batch_idx](0, 0) << " "
-                    << train_inputs_batched[batch_idx](0, 1) << " " << train_labels_batched[batch_idx](0, 0) << " "
-                    << _net.back()->out()(0, 0) << " " << loss << std::endl;
+          // std::cout << batch_idx << ": input: " << train_inputs_batched//[batch_idx](0, 0) << " "
+          //           << train_inputs_batched[batch_idx](0, 1) << " " << train_labels_batched[batch_idx](0, 0) << " "
+          //          << _net.back()->out()(0, 0) << " " << loss << std::endl;
         }
+        std::cout << "loss: " << loss / (batchs * train_inputs_batched[0].template shape<1>()) << std::endl;
       }
     }
 

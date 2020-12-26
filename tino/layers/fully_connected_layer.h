@@ -84,7 +84,7 @@ namespace tino {
         this->_weight.reshape(this->_in_size, this->_out_size);
         this->_bias.reshape(1, this->_out_size);
         this->_out.reshape(this->_n_batch, this->_out_size);
-        this->_delta.reshape(this->_in_size, this->_out_size);
+        this->_delta.reshape(this->_n_batch, this->_in_size);
         this->_delta_weight.reshape(this->_in_size, this->_out_size);
         this->_delta_bias.reshape(1, this->_out_size);
 
