@@ -39,6 +39,11 @@ namespace tino {
       return loss::mse<T>::f(_net.back()->out(), label, ctx);
     }
 
+    void backward_prop(tensor2d<T>& label, core::context& ctx) {
+      _net.back()->backward(label, ctx);
+      // return loss::mse<T>::f(_net.back()->out(), label, ctx);
+    }
+
    public:
     void add(layers::abstract_layer<T>* layer) { _net.emplace_back(layer); }
 
@@ -68,7 +73,7 @@ namespace tino {
         std::size_t n_minibatchs = 1,
         std::function<void(tensor2d<float>&)> initializer = [](tensor2d<float>& x) {
           for (auto& e : x)
-            e = (float)0.1;
+            e = (float)0.01;
         }) {
       using namespace tino::core;
       using namespace tino::backends;
@@ -93,10 +98,11 @@ namespace tino {
         for (std::size_t batch_idx = 0; batch_idx < batchs; batch_idx++) {
 
           auto loss = forward_prop(train_inputs_batched[batch_idx], train_labels_batched[batch_idx], ctx);
-          /* std::cout << batch_idx << ": input: " << train_inputs_batched[batch_idx](0, 0) << " "
+          backward_prop(train_labels_batched[batch_idx], ctx);
+
+          std::cout << batch_idx << ": input: " << train_inputs_batched[batch_idx](0, 0) << " "
                     << train_inputs_batched[batch_idx](0, 1) << " " << train_labels_batched[batch_idx](0, 0) << " "
-                    << loss << std::endl;
-          */
+                    << _net.back()->out()(0, 0) << " " << loss << std::endl;
         }
       }
     }

@@ -50,6 +50,9 @@ namespace tino {
               op::fully_connected_backward_kernel(
                   this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx),
               ctx);
+        else
+          op::fully_connected_backward_kernel(
+              this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx);
 
         return this->_delta;
       }
@@ -58,6 +61,9 @@ namespace tino {
 
         _optimizer->optimize(this->_weight, this->_delta_weight, ctx);
         TINO_MAYBE_UNUSED(next_delta);
+
+        if (!this->_prev_layer)
+          this->_prev_layer->optimize(this->_delta, ctx);
 
         return this->_weight;
       }
