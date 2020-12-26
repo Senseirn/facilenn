@@ -97,6 +97,8 @@ namespace tino {
             }
       */
 
+      bool is_optimizer_set() override { return false; }
+
       ~relu_layer_() {}
     };
     using relu_layer = relu_layer_<TINO_FLOAT_TYPE>;

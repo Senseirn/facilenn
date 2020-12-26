@@ -98,6 +98,8 @@ namespace tino {
         this->_optimizer = std::move(optimizer);
       }
 
+      bool is_optimizer_set() override { return _optimizer ? true : false; }
+
       ~fully_connected_layer_() {}
     };
     using fully_connected_layer = fully_connected_layer_<TINO_FLOAT_TYPE>;
