@@ -16,13 +16,17 @@ int main() {
   net.add(new relu_layer());
 
   // define how to initialize weights
-  net.weight_initializer([](tensor2d<float>& x) {
-    std::random_device rnd;
-    std::mt19937 mt(rnd());
-    std::uniform_real_distribution<> rand(-0.5, 0.5);
-    for (auto& e : x)
-      e = rand(mt);
-  });
+  /*
+    net.weight_initializer([](tensor2d<float>& x) {
+      std::random_device rnd;
+      std::mt19937 mt(rnd());
+      std::uniform_real_distribution<> rand(-0.5, 0.5);
+      for (auto& e : x)
+        e = rand(mt);
+    });
+  */
+
+  net.weight_initializer(initializers::He<float>);
 
   // declare optimizer
   // here we use SGD with parameter alpha = 0.2
