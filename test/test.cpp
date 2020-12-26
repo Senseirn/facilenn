@@ -31,15 +31,18 @@ int main() {
   // declare optimizer
   // here we use SGD with parameter alpha = 0.2
   optimizers::SGD sgd;
-  sgd.alpha(0.2);
+  sgd.alpha(0.1f);
+
+  optimizers::Adam adam;
+  adam.alpha(0.01);
 
   // run 10 epochs with batch_size=10
-  int n_epochs = 10;
-  int n_batchsize = 10;
+  int n_epochs = 15;
+  int n_batchsize = 20;
 
   // generate xor dataset which contains 1,000 pairs of input and label
   xor_generator generator(1000);
 
   // run train
-  net.train(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, sgd);
+  net.train(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);
 }

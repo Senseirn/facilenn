@@ -96,6 +96,7 @@ namespace tino {
 
       void set_optimizer(std::unique_ptr<abstract_optimizer_<T>> optimizer) override {
         this->_optimizer = std::move(optimizer);
+        _optimizer->init(this->_in_size, this->_out_size);
       }
 
       bool is_optimizer_set() override { return _optimizer ? true : false; }

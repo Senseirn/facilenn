@@ -107,9 +107,9 @@ namespace tino {
           loss += calc_loss(train_labels_batched[batch_idx], ctx);
           backward(train_labels_batched[batch_idx], ctx);
 
-          // std::cout << batch_idx << ": input: " << train_inputs_batched//[batch_idx](0, 0) << " "
-          //           << train_inputs_batched[batch_idx](0, 1) << " " << train_labels_batched[batch_idx](0, 0) << " "
-          //          << _net.back()->out()(0, 0) << " " << loss << std::endl;
+          std::cout << batch_idx << ": input: " << train_inputs_batched[batch_idx](0, 0) << " "
+                    << train_inputs_batched[batch_idx](0, 1) << " " << train_labels_batched[batch_idx](0, 0) << " "
+                    << _net.back()->out()(0, 0) << " " << std::endl;
         }
         std::cout << "loss: " << loss / (n_minibatchs * train_inputs_batched[0].template shape<1>()) << std::endl;
       }
