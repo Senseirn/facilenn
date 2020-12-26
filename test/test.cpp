@@ -25,8 +25,8 @@ int main() {
         e = rand(mt);
     });
   */
-
-  net.weight_initializer(initializers::He<float>);
+  // here we use He initializer
+  net.weight_initializer(initializers::He<TINO_FLOAT_TYPE>);
 
   // declare optimizer
   // here we use SGD with parameter alpha = 0.2
