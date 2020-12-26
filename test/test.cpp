@@ -25,7 +25,7 @@ int main() {
   });
 
   // declare optimizer
-  // here we use SGD with paramert alpha = 0.2
+  // here we use SGD with parameter alpha = 0.2
   optimizers::SGD sgd;
   sgd.alpha(0.2);
 
