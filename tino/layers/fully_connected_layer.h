@@ -6,27 +6,27 @@
 namespace tino {
   namespace layers {
 
-    template <typename T>
-    class fully_connected_layer : public abstract_layer<T> {
+    template <typename T = TINO_FLOAT_TYPE>
+    class fully_connected_layer_ : public abstract_layer<T> {
       using layer_t = abstract_layer<T>;
 
      private:
-      std::unique_ptr<abstract_optimizer<T>> _optimizer;
+      std::unique_ptr<abstract_optimizer_<T>> _optimizer;
 
       void initialize_weights(std::function<void(tensor2d<T>&)> initializer) { initializer(this->_weight); }
       void initialize_delta() { std::fill(std::begin(this->_delta), std::end(this->_delta), (T)0); }
 
      public:
-      fully_connected_layer()
+      fully_connected_layer_()
       : abstract_layer<T>(layer_types::fully_connected) {}
 
-      fully_connected_layer(std::size_t in_size, std::size_t out_size)
+      fully_connected_layer_(std::size_t in_size, std::size_t out_size)
       : abstract_layer<T>(in_size, out_size, layer_types::fully_connected)
       , _optimizer(nullptr) {}
 
-      fully_connected_layer(std::size_t in_size,
-                            std::size_t out_size,
-                            std::unique_ptr<abstract_optimizer<T>>&& optimizer)
+      fully_connected_layer_(std::size_t in_size,
+                             std::size_t out_size,
+                             std::unique_ptr<abstract_optimizer_<T>>&& optimizer)
       : abstract_layer<T>(in_size, out_size, layer_types::fully_connected)
       , _optimizer(std::move(optimizer)) {}
 
@@ -94,11 +94,14 @@ namespace tino {
         return true;
       };
 
-      void set_optimizer(std::unique_ptr<abstract_optimizer<T>> optimizer) override {
+      void set_optimizer(std::unique_ptr<abstract_optimizer_<T>> optimizer) override {
         this->_optimizer = std::move(optimizer);
       }
 
-      ~fully_connected_layer() {}
+      bool is_optimizer_set() override { return _optimizer ? true : false; }
+
+      ~fully_connected_layer_() {}
     };
+    using fully_connected_layer = fully_connected_layer_<TINO_FLOAT_TYPE>;
   } // namespace layers
 } // namespace tino

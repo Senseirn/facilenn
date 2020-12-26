@@ -5,8 +5,8 @@
 
 namespace tino {
   namespace layers {
-    template <typename T>
-    class relu_layer : public abstract_layer<T> {
+    template <typename T = TINO_FLOAT_TYPE>
+    class relu_layer_ : public abstract_layer<T> {
       using layer_t = abstract_layer<T>;
 
      private:
@@ -20,10 +20,10 @@ namespace tino {
       */
 
      public:
-      relu_layer()
+      relu_layer_()
       : abstract_layer<T>(layer_types::relu) {}
 
-      relu_layer(std::size_t in_size, std::size_t out_size)
+      relu_layer_(std::size_t in_size, std::size_t out_size)
       : abstract_layer<T>(in_size, out_size, layer_types::relu) {}
 
       tensor2d<T>& forward(tensor2d<T>& prev_out, core::context& ctx) override {
@@ -97,7 +97,10 @@ namespace tino {
             }
       */
 
-      ~relu_layer() {}
+      bool is_optimizer_set() override { return false; }
+
+      ~relu_layer_() {}
     };
+    using relu_layer = relu_layer_<TINO_FLOAT_TYPE>;
   } // namespace layers
 } // namespace tino

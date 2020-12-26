@@ -2,6 +2,7 @@
 
 #include "tino/backends/backends.h"
 #include "tino/core/context.h"
+#include "tino/utils/macros.h"
 #include "tino/utils/utils.h"
 
 #include <random>
@@ -19,9 +20,13 @@ namespace tino {
       virtual ~dataset_generator() {}
     };
 
-    template <typename T>
-    class xor_generator : public dataset_generator<T> {
+    template <typename T = TINO_FLOAT_TYPE>
+    class xor_generator_ : public dataset_generator<T> {
      private:
+      std::size_t _n_data;
+      tensor2d<T> _train_inputs;
+      tensor2d<T> _train_labels;
+
       bool check_args(tensor2d<T>& train_inputs, tensor2d<T>& train_labels) {
         if (train_inputs.template shape<1>() <= 0 || train_labels.template shape<1>() <= 0)
           return false;
@@ -36,6 +41,13 @@ namespace tino {
       }
 
      public:
+      xor_generator_(const std::size_t n_data)
+      : _n_data(n_data)
+      , _train_inputs(_n_data, 2)
+      , _train_labels(_n_data, 1) {
+        generate(_train_inputs, _train_labels);
+      }
+
       bool generate(tensor2d<T>& train_inputs, tensor2d<T>& train_labels) {
         if (!check_args(train_inputs, train_labels))
           return false;
@@ -55,7 +67,11 @@ namespace tino {
         return true;
       }
 
-      ~xor_generator() {}
+      tensor2d<T>& train_inputs() { return _train_inputs; }
+      tensor2d<T>& train_labels() { return _train_labels; }
+
+      ~xor_generator_() {}
     };
+    using xor_generator = xor_generator_<TINO_FLOAT_TYPE>;
   } // namespace utils
 } // namespace tino

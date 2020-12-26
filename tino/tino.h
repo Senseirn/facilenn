@@ -9,9 +9,13 @@
 
 namespace tino {
   template <typename T>
-  class network {
+  class netowork_;
+
+  template <typename T = TINO_FLOAT_TYPE>
+  class network_ {
    private:
     std::vector<std::unique_ptr<layers::abstract_layer<T>>> _net;
+    std::function<void(tensor2d<T>&)> _weight_initializer;
     bool _is_initialized = false;
 
     void prepare_batched_data(tensor2d<T>& inputs,
@@ -34,6 +38,12 @@ namespace tino {
       }
     }
 
+    template <class Optimizer>
+    void set_optimizer_each_layer(const Optimizer& optimizer) {
+      for (auto& layer : _net)
+        layer->set_optimizer(optimizer());
+    }
+
     T calc_loss(tensor2d<T>& label, core::context& ctx) { return loss::mse<T>::f(_net.back()->out(), label, ctx); }
 
     void forward(tensor2d<T>& input, core::context& ctx) { _net.front()->forward(input, ctx); }
@@ -43,13 +53,13 @@ namespace tino {
    public:
     void add(layers::abstract_layer<T>* layer) { _net.emplace_back(layer); }
 
-    bool initialize(
-        std::size_t n_batch = 1,
-        std::function<void(tensor2d<float>&)> initializer = [](tensor2d<float>& x) {
-          for (auto& e : x)
-            e = (float)0.1;
-        }) {
+    network_& weight_initializer(std::function<void(tensor2d<T>&)> func) {
+      _weight_initializer = func;
+      return *this;
+    }
 
+    template <typename F>
+    bool initialize(F initializer, std::size_t n_batch = 1) {
       for (int i = 0; i < (int)_net.size(); i++)
         _net[i]->make_connection(i == 0 ? nullptr : _net[i - 1].get(),
                                  i == (int)_net.size() - 1 ? nullptr : _net[i + 1].get());
@@ -62,38 +72,37 @@ namespace tino {
       return _is_initialized;
     }
 
-    template <typename F>
-    void train(
-        tensor2d<T>& train_inputs,
-        tensor2d<T>& train_labels,
-        std::size_t n_epochs,
-        std::size_t n_minibatchs = 1,
-        F initializer = [](tensor2d<float>& x) {
-          for (auto& e : x)
-            e = (float)0.01;
-        }) {
+    template <class Optimizer>
+    void train(tensor2d<T>& train_inputs,
+               tensor2d<T>& train_labels,
+               std::size_t n_epochs,
+               std::size_t n_batchsize,
+               const Optimizer& optimizer) {
       using namespace tino::core;
       using namespace tino::backends;
       context ctx(backend_t::naive, stages::train);
 
       if (!_is_initialized) {
         // weight initialize function
-        initialize(n_minibatchs, initializer);
+        initialize(_weight_initializer, n_batchsize);
       }
+
+      // set optimizer for each layer
+      set_optimizer_each_layer(optimizer);
 
       // prepare input and label vectors
       std::vector<tensor2d<T>> train_inputs_batched, train_labels_batched;
-      if (train_inputs.template shape<1>() % n_minibatchs) {
+      if (train_inputs.template shape<1>() % n_batchsize) {
         std::cout << "no supported minibatch size" << std::endl;
         return;
       }
-      prepare_batched_data(train_inputs, train_labels, train_inputs_batched, train_labels_batched, n_minibatchs);
-      std::size_t batchs = train_inputs.template shape<1>() / n_minibatchs;
+      prepare_batched_data(train_inputs, train_labels, train_inputs_batched, train_labels_batched, n_batchsize);
+      std::size_t n_minibatchs = train_inputs.template shape<1>() / n_batchsize;
 
       for (std::size_t epoch = 1; epoch <= n_epochs; epoch++) {
         std::cout << "epoch: " << epoch << std::endl;
         T loss = 0;
-        for (std::size_t batch_idx = 0; batch_idx < batchs; batch_idx++) {
+        for (std::size_t batch_idx = 0; batch_idx < n_minibatchs; batch_idx++) {
           forward(train_inputs_batched[batch_idx], ctx);
           loss += calc_loss(train_labels_batched[batch_idx], ctx);
           backward(train_labels_batched[batch_idx], ctx);
@@ -102,7 +111,7 @@ namespace tino {
           //           << train_inputs_batched[batch_idx](0, 1) << " " << train_labels_batched[batch_idx](0, 0) << " "
           //          << _net.back()->out()(0, 0) << " " << loss << std::endl;
         }
-        std::cout << "loss: " << loss / (batchs * train_inputs_batched[0].template shape<1>()) << std::endl;
+        std::cout << "loss: " << loss / (n_minibatchs * train_inputs_batched[0].template shape<1>()) << std::endl;
       }
     }
 
@@ -114,6 +123,7 @@ namespace tino {
       return is_ready;
     }
 
-    ~network() {}
+    ~network_() {}
   };
+  using network = network_<TINO_FLOAT_TYPE>;
 } // namespace tino

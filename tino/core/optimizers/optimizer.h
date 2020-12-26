@@ -10,24 +10,24 @@ namespace tino {
       enum class optimizer_t { abstract, sgd, momentum, adagrad, adam };
 
       template <typename T>
-      class abstract_optimizer {
+      class abstract_optimizer_ {
        private:
         optimizer_t _optimizer_type;
 
        public:
-        abstract_optimizer(optimizer_t optimizer_type)
+        abstract_optimizer_(optimizer_t optimizer_type)
         : _optimizer_type(optimizer_type) {}
         virtual optimizer_t type() { return _optimizer_type; }
         virtual void optimize(tensor2d<T>&, tensor2d<T>&, context&) = 0;
       };
 
-      template <typename T>
-      class sgd_optimizer : public abstract_optimizer<T> {
+      template <typename T = TINO_FLOAT_TYPE>
+      class sgd_optimizer_ : public abstract_optimizer_<T> {
        private:
         const T _alpha; // learning rate
        public:
-        sgd_optimizer(T alpha = 0.1)
-        : abstract_optimizer<T>(optimizer_t::sgd)
+        sgd_optimizer_(T alpha = 0.1)
+        : abstract_optimizer_<T>(optimizer_t::sgd)
         , _alpha(alpha) {}
 
         void optimize(tensor2d<T>& weight, tensor2d<T>& delta_weight, context& ctx) override {

@@ -5,8 +5,8 @@
 
 namespace tino {
   namespace layers {
-    template <typename T>
-    class softmax_layer : public abstract_layer<T> {
+    template <typename T = TINO_FLOAT_TYPE>
+    class softmax_layer_ : public abstract_layer<T> {
       using layer_t = abstract_layer<T>;
 
      private:
@@ -20,10 +20,10 @@ namespace tino {
       */
 
      public:
-      softmax_layer()
+      softmax_layer_()
       : abstract_layer<T>(layer_types::softmax) {}
 
-      softmax_layer(std::size_t in_size, std::size_t out_size)
+      softmax_layer_(std::size_t in_size, std::size_t out_size)
       : abstract_layer<T>(in_size, out_size, layer_types::softmax) {}
 
       tensor2d<T>& forward(tensor2d<T>& prev_out, core::context& ctx) override {
@@ -79,13 +79,16 @@ namespace tino {
         return true;
       };
 
+      bool is_optimizer_set() override { return false; }
+
       /*
             void set_optimizer(std::unique_ptr<abstract_optimizer<T>> optimizer) override {
               this->_optimizer = std::move(optimizer);
             }
       */
 
-      ~softmax_layer() {}
+      ~softmax_layer_() {}
     };
+    using softmax_layer = softmax_layer_<TINO_FLOAT_TYPE>;
   } // namespace layers
 } // namespace tino
