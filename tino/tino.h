@@ -62,12 +62,13 @@ namespace tino {
       return _is_initialized;
     }
 
+    template <typename F>
     void train(
         tensor2d<T>& train_inputs,
         tensor2d<T>& train_labels,
         std::size_t n_epochs,
         std::size_t n_minibatchs = 1,
-        std::function<void(tensor2d<float>&)> initializer = [](tensor2d<float>& x) {
+        F initializer = [](tensor2d<float>& x) {
           for (auto& e : x)
             e = (float)0.01;
         }) {
