@@ -2,6 +2,7 @@
 
 #include "tino/backends/backends.h"
 #include "tino/core/context.h"
+#include "tino/utils/macros.h"
 #include "tino/utils/utils.h"
 
 #include <random>
@@ -19,8 +20,8 @@ namespace tino {
       virtual ~dataset_generator() {}
     };
 
-    template <typename T>
-    class xor_generator : public dataset_generator<T> {
+    template <typename T = TINO_FLOAT_TYPE>
+    class xor_generator_ : public dataset_generator<T> {
      private:
       bool check_args(tensor2d<T>& train_inputs, tensor2d<T>& train_labels) {
         if (train_inputs.template shape<1>() <= 0 || train_labels.template shape<1>() <= 0)
@@ -55,7 +56,8 @@ namespace tino {
         return true;
       }
 
-      ~xor_generator() {}
+      ~xor_generator_() {}
     };
+    using xor_generator = xor_generator_<TINO_FLOAT_TYPE>;
   } // namespace utils
 } // namespace tino

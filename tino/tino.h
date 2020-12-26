@@ -8,8 +8,8 @@
 #include "utils/utils.h"
 
 namespace tino {
-  template <typename T>
-  class network {
+  template <typename T = TINO_FLOAT_TYPE>
+  class network_ {
    private:
     std::vector<std::unique_ptr<layers::abstract_layer<T>>> _net;
     bool _is_initialized = false;
@@ -114,6 +114,7 @@ namespace tino {
       return is_ready;
     }
 
-    ~network() {}
+    ~network_() {}
   };
+  using network = network_<TINO_FLOAT_TYPE>;
 } // namespace tino

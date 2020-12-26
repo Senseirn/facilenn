@@ -75,7 +75,7 @@ namespace tino {
       virtual layer_types layer_type() { return _layer_type; }
       virtual bool initialize(std::function<void(tensor2d<T>&)>, std::size_t) = 0;
 
-      virtual void set_optimizer(std::unique_ptr<abstract_optimizer<T>>) {}
+      virtual void set_optimizer(std::unique_ptr<abstract_optimizer_<T>>) {}
 
       virtual void make_connection(layer_t* prev_layer, layer_t* next_layer) {
         _prev_layer = prev_layer;

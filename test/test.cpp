@@ -6,18 +6,20 @@ int main() {
   using namespace tino::core;
   using namespace tino::utils;
 
-  tino::network<float> net;
-  net.add(new fully_connected_layer<float>(64, 32, sgd<float>(0.1)));
-  net.add(new relu_layer<float>());
-  net.add(new fully_connected_layer<float>(32, 16, sgd<float>(0.1)));
-  net.add(new relu_layer<float>());
-  net.add(new fully_connected_layer<float>(16, 1, sgd<float>(0.1)));
-  net.add(new relu_layer<float>());
+  tino::network net;
+  SGD sgd;
+  sgd.alpha(0.2);
+  net.add(new fully_connected_layer(64, 32, sgd()));
+  net.add(new relu_layer());
+  net.add(new fully_connected_layer(32, 16, sgd()));
+  net.add(new relu_layer());
+  net.add(new fully_connected_layer(16, 1, sgd()));
+  net.add(new relu_layer());
   //  net.initialize();
 
   tensor2d<float> train_inputs(1000, 2);
   tensor2d<float> train_labels(1000, 1);
-  xor_generator<float> generator;
+  xor_generator generator;
   generator.generate(train_inputs, train_labels);
 
   net.train(train_inputs, train_labels, 30, 20, [](tensor2d<float>& x) {
