@@ -91,12 +91,6 @@ namespace tino {
         std::fill(std::begin(delta_weight), std::end(delta_weight), (T)0);
 
         using index_t = std::size_t;
-        auto delta_0 = delta.template shape<0>();
-        auto delta_1 = delta.template shape<1>();
-        auto next_delta_0 = next_delta.template shape<0>();
-        auto next_delta_1 = next_delta.template shape<1>();
-        auto weight_0 = weight.template shape<0>();
-        auto weight_1 = weight.template shape<1>();
 
         for (index_t i = 0; i < next_delta.template shape<1>(); i++)
           for (index_t j = 0; j < weight.template shape<1>(); j++)
