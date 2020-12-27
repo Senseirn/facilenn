@@ -43,17 +43,20 @@ namespace tino {
 
       tensor2d<T>& backward(tensor2d<T>& next_delta, core::context& ctx) override {
 
-        if (!this->_prev_layer)
-          this->_prev_layer->backward(op::relu_activation_backward_kernel(this->_in, this->_delta, next_delta, ctx),
-                                      ctx);
-        else {
+        if (!this->_next_layer) {
           using index_t = typename tensor2d<T>::index_t;
           for (index_t i = 0; i < next_delta.template shape<1>(); i++)
             for (index_t j = 0; j < next_delta.template shape<0>(); j++)
               this->_delta(i, j) = this->_out(i, j) - next_delta(i, j);
-
-          this->_prev_layer->backward(this->_delta, ctx);
         }
+        if (this->_prev_layer) {
+          if (!this->_next_layer)
+            this->_prev_layer->backward(this->_delta, ctx);
+          else
+            this->_prev_layer->backward(op::relu_activation_backward_kernel(this->_in, this->_delta, next_delta, ctx),
+                                        ctx);
+        }
+
         optimize(next_delta, ctx);
         return this->_delta;
       }
@@ -62,7 +65,8 @@ namespace tino {
         TINO_MAYBE_UNUSED(next_delta);
         TINO_MAYBE_UNUSED(ctx);
 
-        this->_prev_layer->optimize(this->_delta, ctx);
+        if (this->_prev_layer)
+          this->_prev_layer->optimize(this->_delta, ctx);
 
         return this->_delta;
       }

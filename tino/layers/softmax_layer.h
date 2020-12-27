@@ -10,15 +10,6 @@ namespace tino {
       using layer_t = abstract_layer<T>;
 
      private:
-      /*
-      std::unique_ptr<abstract_optimizer<T>> _optimizer;
-
-      void initialize_weights(std::function<void(tensor2d<T>&)> initializer) {
-        initializer(this->_weight);
-      }
-      void initialize_delta() { std::fill(std::begin(this->_delta), std::end(this->_delta), (T)0); }
-      */
-
      public:
       softmax_layer_()
       : abstract_layer<T>(layer_types::softmax) {}
@@ -43,15 +34,29 @@ namespace tino {
         TINO_MAYBE_UNUSED(next_delta);
         TINO_MAYBE_UNUSED(ctx);
 
-        if (!this->_prev_layer)
-          this->_prev_layer->backward(this->_delta, ctx);
-
+        if (!this->_next_layer) {
+          using index_t = typename tensor2d<T>::index_t;
+          for (index_t i = 0; i < next_delta.template shape<1>(); i++)
+            for (index_t j = 0; j < next_delta.template shape<0>(); j++)
+              this->_delta(i, j) = this->_out(i, j) - next_delta(i, j);
+        }
+        if (this->_prev_layer) {
+          if (!this->_next_layer)
+            this->_prev_layer->backward(this->_delta, ctx);
+          else
+            this->_prev_layer->backward(
+                op::softmax_activation_backward_kernel(this->_in, this->_delta, next_delta, ctx), ctx);
+        }
+        optimize(next_delta, ctx);
         return this->_delta;
       }
 
       tensor2d<T>& optimize(tensor2d<T>& next_delta, core::context& ctx) override {
         TINO_MAYBE_UNUSED(next_delta);
         TINO_MAYBE_UNUSED(ctx);
+
+        if (this->_prev_layer)
+          this->_prev_layer->optimize(this->_delta, ctx);
 
         return this->_weight;
       }
@@ -73,6 +78,7 @@ namespace tino {
         this->_n_batch = n_batch;
         this->_in.reshape(this->_n_batch, this->_in_size);
         this->_out.reshape(this->_n_batch, this->_out_size);
+        this->_delta.reshape(this->_n_batch, this->_out_size);
 
         TINO_MAYBE_UNUSED(initializer);
 
@@ -80,12 +86,6 @@ namespace tino {
       };
 
       bool is_optimizer_set() override { return false; }
-
-      /*
-            void set_optimizer(std::unique_ptr<abstract_optimizer<T>> optimizer) override {
-              this->_optimizer = std::move(optimizer);
-            }
-      */
 
       ~softmax_layer_() {}
     };
