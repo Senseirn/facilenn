@@ -1,5 +1,7 @@
 #/bin/sh
 
+cd `dirname $0`
+
 echo "preparing mnist dataset.."
 
 #1. download mnist dataset
