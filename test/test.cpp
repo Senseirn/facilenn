@@ -5,6 +5,7 @@ int main() {
   using namespace tino::layers;
   using namespace tino::core;
   using namespace tino::utils;
+  using namespace tino::loss;
 
   // define network
   tino::network net;
@@ -52,6 +53,6 @@ int main() {
    }
    */
   // run train
-  net.train(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);
+  net.train<loss_t::mse>(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);
   //  net.train(mnist.train_inputs(), mnist.train_labels(), n_epochs, n_batchsize, adam);
 }

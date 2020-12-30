@@ -7,11 +7,13 @@
 
 namespace tino {
   namespace loss {
+
+    enum class loss_t { abstract, mse, cross_entropy };
     template <typename T>
     class abstract_loss {};
 
     template <typename T>
-    class mse : public abstract_loss<T> {
+    class mse_ : public abstract_loss<T> {
      public:
       static T f(tensor2d<T>& y, tensor2d<T>& t, core::context& ctx) {
         using index_t = typename tensor2d<T>::index_t;
@@ -40,7 +42,7 @@ namespace tino {
     };
 
     template <typename T>
-    class cross_entropy : public abstract_loss<T> {
+    class cross_entropy_ : public abstract_loss<T> {
      public:
       static T f(tensor2d<T>& y, tensor2d<T>& t, core::context& ctx) {
         using index_t = typename tensor2d<T>::index_t;
@@ -67,5 +69,6 @@ namespace tino {
         return error;
       }
     };
+
   } // namespace loss
 } // namespace tino

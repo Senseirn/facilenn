@@ -44,9 +44,14 @@ namespace tino {
         layer->set_optimizer(optimizer());
     }
 
+    // TODO: use template specilization instead of swich-case
+    template <loss::loss_t loss_func>
     T calc_loss(tensor2d<T>& label, core::context& ctx) {
-      // return loss::mse<T>::f(_net.back()->out(), label, ctx);
-      return loss::cross_entropy<T>::f(_net.back()->out(), label, ctx);
+      switch (loss_func) {
+        case loss::loss_t::mse: return loss::mse_<T>::f(_net.back()->out(), label, ctx); break;
+        case loss::loss_t::cross_entropy: return loss::cross_entropy_<T>::f(_net.back()->out(), label, ctx); break;
+        default: break;
+      }
     }
 
     void forward(tensor2d<T>& input, core::context& ctx) { _net.front()->forward(input, ctx); }
@@ -75,7 +80,7 @@ namespace tino {
       return _is_initialized;
     }
 
-    template <class Optimizer>
+    template <loss::loss_t loss_func, class Optimizer>
     void train(tensor2d<T>& train_inputs,
                tensor2d<T>& train_labels,
                std::size_t n_epochs,
@@ -105,11 +110,11 @@ namespace tino {
       for (std::size_t epoch = 1; epoch <= n_epochs; epoch++) {
         std::cout << "epoch: " << epoch << std::endl;
         T loss = 0;
-        T accuracy = 0;
         int correct_count = 0;
         for (std::size_t batch_idx = 0; batch_idx < n_minibatchs; batch_idx++) {
           forward(train_inputs_batched[batch_idx], ctx);
-          loss += calc_loss(train_labels_batched[batch_idx], ctx);
+          loss += calc_loss<loss_func>(train_labels_batched[batch_idx],
+                                       ctx); // calc_loss(train_labels_batched[batch_idx], ctx);
           backward(train_labels_batched[batch_idx], ctx);
 
           /*
@@ -119,7 +124,7 @@ namespace tino {
                               << _net.back()->out()(0, 0) << " " << std::endl;
                               */
 
-          for (int b = 0; b < n_batchsize; b++) {
+          for (int b = 0; b < (int)n_batchsize; b++) {
             int idx = -1;
             int max_idx = -1;
             T maximum = std::numeric_limits<T>::lowest();
