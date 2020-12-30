@@ -47,7 +47,8 @@ namespace tino {
             this->_prev_layer->backward(
                 op::softmax_activation_backward_kernel(this->_in, this->_delta, next_delta, ctx), ctx);
         }
-        optimize(next_delta, ctx);
+        if (!this->_next_layer)
+          optimize(next_delta, ctx);
         return this->_delta;
       }
 

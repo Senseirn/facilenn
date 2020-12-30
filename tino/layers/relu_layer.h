@@ -57,7 +57,12 @@ namespace tino {
                                         ctx);
         }
 
-        optimize(next_delta, ctx);
+        if (!this->_next_layer) {
+          // std::cout << "called last" << std::endl;
+          optimize(next_delta, ctx);
+        } else {
+          // std::cout << "not called last" << std::endl;
+        }
         return this->_delta;
       }
 

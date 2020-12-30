@@ -2,6 +2,7 @@
 
 #include "tino/backends/backends.h"
 #include "tino/core/context.h"
+#include "tino/utils/datasets/datasets.h"
 #include "tino/utils/macros.h"
 #include "tino/utils/utils.h"
 
@@ -9,16 +10,6 @@
 
 namespace tino {
   namespace utils {
-    template <typename T>
-    class dataset_generator {
-     private:
-      virtual bool check_args(tensor2d<T>&, tensor2d<T>&) = 0;
-
-     public:
-      virtual bool generate(tensor2d<T>&, tensor2d<T>&) = 0;
-
-      virtual ~dataset_generator() {}
-    };
 
     template <typename T = TINO_FLOAT_TYPE>
     class xor_generator_ : public dataset_generator<T> {

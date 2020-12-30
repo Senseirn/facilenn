@@ -43,9 +43,8 @@ namespace tino {
           for (index_t j = 0; j < in.template shape<0>(); j++)
             accum += std::exp(in(i, j) - maximum);
 
-          for (index_t j = 0; j < in.template shape<0>(); j++) {
+          for (index_t j = 0; j < in.template shape<0>(); j++)
             out(i, j) = std::exp(in(i, j) - maximum) / accum;
-          }
         }
 
         TINO_MAYBE_UNUSED(ctx);

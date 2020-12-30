@@ -15,6 +15,8 @@ namespace tino {
 
       void initialize_weights(std::function<void(tensor2d<T>&)> initializer) { initializer(this->_weight); }
       void initialize_delta() { std::fill(std::begin(this->_delta), std::end(this->_delta), (T)0); }
+      void initialize_bias() { std::fill(std::begin(this->_bias), std::end(this->_bias), (T)0); }
+      void initialize_delta_bias() { std::fill(std::begin(this->_delta_bias), std::end(this->_delta_bias), (T)0); }
 
      public:
       fully_connected_layer_()
@@ -45,15 +47,15 @@ namespace tino {
 
       tensor2d<T>& backward(tensor2d<T>& next_delta, core::context& ctx) override {
 
-        if (!this->_prev_layer)
+        if (this->_prev_layer)
           this->_prev_layer->backward(
               op::fully_connected_backward_kernel(
                   this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx),
               ctx);
-        else
+        else {
           op::fully_connected_backward_kernel(
               this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx);
-
+        }
         return this->_delta;
       }
 
@@ -62,9 +64,17 @@ namespace tino {
         _optimizer->optimize(this->_weight, this->_delta_weight, ctx);
         TINO_MAYBE_UNUSED(next_delta);
 
-        if (!this->_prev_layer)
+        if (this->_prev_layer) {
           this->_prev_layer->optimize(this->_delta, ctx);
+          //   std::cout << "called" << std::endl;
+        } else {
+          //  std::cout << "not called" << std::endl;
+        }
 
+        /*
+                std::cout << "w[0]:" << this->_weight(0, 0) << " layer: " << this->_in_size << " " << this->_out_size
+                          << std::endl;
+        */
         return this->_weight;
       }
 
@@ -90,6 +100,8 @@ namespace tino {
 
         initialize_weights(initializer);
         initialize_delta();
+        initialize_bias();
+        initialize_delta_bias();
 
         return true;
       };
