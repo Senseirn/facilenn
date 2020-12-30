@@ -99,14 +99,11 @@ namespace tino {
         });
 
         utils::concurrent_for(ctx, in.template shape<0>(), [&](index_t i) {
-          for (index_t j = 0; j < next_delta.template shape<0>(); j++)
+          for (index_t j = 0; j < next_delta.template shape<0>(); j++) {
             for (index_t k = 0; k < in.template shape<1>(); k++)
               delta_weight(i, j) += in(k, i) * next_delta(k, j);
-        });
-
-        utils::concurrent_for(ctx, delta_weight.template shape<1>(), [&](index_t i) {
-          for (index_t j = 0; j < delta_weight.template shape<0>(); j++)
-            delta_weight(i, j) /= in.template shape<1>(); // div by n_batch.
+            delta_weight(i, j) /= in.template shape<1>();
+          }
         });
 
         TINO_MAYBE_UNUSED(delta_bias);
