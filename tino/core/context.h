@@ -1,7 +1,6 @@
 #pragma once
 
 #include "tino/backends/backend_types.h"
-#include "tino/utils/utils.h"
 
 namespace tino {
   namespace core {

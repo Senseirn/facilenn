@@ -124,25 +124,26 @@ namespace tino {
                               << _net.back()->out()(0, 0) << " " << std::endl;
                               */
 
-          for (int b = 0; b < (int)n_batchsize; b++) {
-            int idx = -1;
-            int max_idx = -1;
-            T maximum = std::numeric_limits<T>::lowest();
-            for (int i = 0; i < 10; i++) {
-              if (train_labels_batched[batch_idx](b, i) > 0.99) {
-                idx = i;
+          if (1)
+            for (int b = 0; b < (int)n_batchsize; b++) {
+              int idx = -1;
+              int max_idx = -1;
+              T maximum = std::numeric_limits<T>::lowest();
+              for (int i = 0; i < 10; i++) {
+                if (train_labels_batched[batch_idx](b, i) > 0.99) {
+                  idx = i;
+                }
+              }
+              for (int i = 0; i < 10; i++) {
+                if (_net.back()->out()(b, i) > maximum) {
+                  max_idx = i;
+                  maximum = _net.back()->out()(b, i);
+                }
+              }
+              if (idx == max_idx) {
+                correct_count++;
               }
             }
-            for (int i = 0; i < 10; i++) {
-              if (_net.back()->out()(b, i) > maximum) {
-                max_idx = i;
-                maximum = _net.back()->out()(b, i);
-              }
-            }
-            if (idx == max_idx) {
-              correct_count++;
-            }
-          }
         }
         std::cout << "loss: " << loss / (n_minibatchs * train_inputs_batched[0].template shape<1>()) << std::endl;
         std::cout << "acc: "

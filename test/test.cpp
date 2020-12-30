@@ -9,12 +9,12 @@ int main() {
 
   // define network
   tino::network net;
-  net.add(new fully_connected_layer(2, 8));
+  net.add(new fully_connected_layer(28 * 28, 64 * 3));
   net.add(new relu_layer());
-  net.add(new fully_connected_layer(8, 8));
+  net.add(new fully_connected_layer(64 * 3, 32 * 4));
   net.add(new relu_layer());
-  net.add(new fully_connected_layer(8, 1));
-  net.add(new relu_layer());
+  net.add(new fully_connected_layer(32 * 4, 10));
+  net.add(new softmax_layer());
 
   // define how to initialize weights
   /*
@@ -35,10 +35,10 @@ int main() {
   sgd.alpha(0.01f);
 
   optimizers::Adam adam;
-  adam.alpha(0.001f);
+  adam.alpha(0.01f);
 
   // run 10 epochs with batch_size=10
-  int n_epochs = 1;
+  int n_epochs = 20;
   int n_batchsize = 100;
 
   // generate xor dataset which contains 1,000 pairs of input and label
@@ -53,6 +53,6 @@ int main() {
    }
    */
   // run train
-  net.train<loss_t::mse>(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);
-  //  net.train(mnist.train_inputs(), mnist.train_labels(), n_epochs, n_batchsize, adam);
+  //  net.train<loss_t::mse>(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);
+  net.train<loss_t::cross_entropy>(mnist.train_inputs(), mnist.train_labels(), n_epochs, n_batchsize, adam);
 }
