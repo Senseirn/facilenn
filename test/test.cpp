@@ -33,9 +33,9 @@ int main() {
   int n_batchsize = 200;
 
   // generate xor dataset which contains 1,000 pairs of input and label
-  xor_generator generator(1000);
+  xor_loader generator(1000);
 
-  mnist_generator mnist("../../data/mnist/train-images-idx3-ubyte", "../../data/mnist/train-labels-idx1-ubyte");
+  mnist_loader mnist("../../data/mnist/train-images-idx3-ubyte", "../../data/mnist/train-labels-idx1-ubyte");
 
   // run train
   //  net.train<loss_t::mse>(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);

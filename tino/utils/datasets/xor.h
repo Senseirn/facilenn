@@ -12,7 +12,7 @@ namespace tino {
   namespace utils {
 
     template <typename T = TINO_FLOAT_TYPE>
-    class xor_generator_ : public dataset_generator<T> {
+    class xor_loader_ : public dataset_loader<T> {
      private:
       std::size_t _n_data;
       tensor2d<T> _train_inputs;
@@ -32,7 +32,7 @@ namespace tino {
       }
 
      public:
-      xor_generator_(const std::size_t n_data)
+      xor_loader_(const std::size_t n_data)
       : _n_data(n_data)
       , _train_inputs(_n_data, 2)
       , _train_labels(_n_data, 1) {
@@ -61,8 +61,8 @@ namespace tino {
       tensor2d<T>& train_inputs() { return _train_inputs; }
       tensor2d<T>& train_labels() { return _train_labels; }
 
-      ~xor_generator_() {}
+      ~xor_loader_() {}
     };
-    using xor_generator = xor_generator_<TINO_FLOAT_TYPE>;
+    using xor_loader = xor_loader_<TINO_FLOAT_TYPE>;
   } // namespace utils
 } // namespace tino

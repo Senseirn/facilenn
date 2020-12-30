@@ -12,7 +12,7 @@
 namespace tino {
   namespace utils {
     template <typename T = TINO_FLOAT_TYPE>
-    class mnist_generator_ : public dataset_generator<T> {
+    class mnist_loader_ : public dataset_loader<T> {
      private:
       const std::size_t _n_train_data = 60000;
       const std::size_t _n_test_data = 10000;
@@ -100,7 +100,7 @@ namespace tino {
       }
 
      public:
-      mnist_generator_(std::string train_image_path, std::string train_label_path)
+      mnist_loader_(std::string train_image_path, std::string train_label_path)
       : _train_inputs(_n_train_data, _image_width * _image_height * _image_ch)
       , _train_labels(_n_train_data, _n_classes) {
         read_images(train_image_path);
@@ -116,8 +116,9 @@ namespace tino {
       tensor2d<T>& train_inputs() { return this->_train_inputs; }
       tensor2d<T>& train_labels() { return _train_labels; }
 
-      ~mnist_generator_() {}
+      ~mnist_loader_() {}
     }; // namespace utils
-    using mnist_generator = mnist_generator_<TINO_FLOAT_TYPE>;
+    using mnist_loader = mnist_loader_<TINO_FLOAT_TYPE>;
+    using fashion_mnist_loader = mnist_loader_<TINO_FLOAT_TYPE>;
   } // namespace utils
 } // namespace tino

@@ -4,9 +4,9 @@ namespace tino {
   namespace backends {
     enum class backend_t {
       naive,
-      OpenBLAS,
+      openblas,
     };
 
-    enum class prallelize_t { none, openmp, tbb };
+    enum class parallelize_t { none, openmp, intel_tbb };
   } // namespace backends
 } // namespace tino
