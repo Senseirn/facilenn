@@ -34,7 +34,7 @@ namespace tino {
       tensor2d<T>& softmax_activation_forward_kernel_naive(tensor2d<T>& in, tensor2d<T>& out, context& ctx) {
         using index_t = std::size_t;
 
-        for (index_t i = 0; i < in.template shape<1>(); i++) {
+        utils::concurrent_for(ctx, in.template shape<1>(), [&](index_t i) {
           T accum = (T)0;
           T maximum = std::numeric_limits<T>::lowest();
           for (index_t j = 0; j < in.template shape<0>(); j++)
@@ -45,7 +45,22 @@ namespace tino {
 
           for (index_t j = 0; j < in.template shape<0>(); j++)
             out(i, j) = std::exp(in(i, j) - maximum) / accum;
-        }
+        });
+
+        /*
+                for (index_t i = 0; i < in.template shape<1>(); i++) {
+                  T accum = (T)0;
+                  T maximum = std::numeric_limits<T>::lowest();
+                  for (index_t j = 0; j < in.template shape<0>(); j++)
+                    maximum = std::max(maximum, in(i, j));
+
+                  for (index_t j = 0; j < in.template shape<0>(); j++)
+                    accum += std::exp(in(i, j) - maximum);
+
+                  for (index_t j = 0; j < in.template shape<0>(); j++)
+                    out(i, j) = std::exp(in(i, j) - maximum) / accum;
+                }
+                */
 
         TINO_MAYBE_UNUSED(ctx);
 

@@ -35,11 +35,11 @@ int main() {
   sgd.alpha(0.01f);
 
   optimizers::Adam adam;
-  adam.alpha(0.01f);
+  adam.alpha(0.001f);
 
   // run 10 epochs with batch_size=10
   int n_epochs = 20;
-  int n_batchsize = 100;
+  int n_batchsize = 200;
 
   // generate xor dataset which contains 1,000 pairs of input and label
   xor_generator generator(1000);
