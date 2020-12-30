@@ -41,11 +41,6 @@ namespace tino {
             for (index_t j = 0; j < next_delta.template shape<0>(); j++)
               this->_delta(i, j) = this->_out(i, j) - next_delta(i, j);
           });
-          /*
-          for (index_t i = 0; i < next_delta.template shape<1>(); i++)
-            for (index_t j = 0; j < next_delta.template shape<0>(); j++)
-              this->_delta(i, j) = this->_out(i, j) - next_delta(i, j);
-                */
         }
         if (this->_prev_layer) {
           if (!this->_next_layer)
