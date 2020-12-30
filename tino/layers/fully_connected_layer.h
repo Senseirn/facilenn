@@ -66,15 +66,7 @@ namespace tino {
 
         if (this->_prev_layer) {
           this->_prev_layer->optimize(this->_delta, ctx);
-          //   std::cout << "called" << std::endl;
-        } else {
-          //  std::cout << "not called" << std::endl;
         }
-
-        /*
-                std::cout << "w[0]:" << this->_weight(0, 0) << " layer: " << this->_in_size << " " << this->_out_size
-                          << std::endl;
-        */
         return this->_weight;
       }
 

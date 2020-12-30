@@ -89,14 +89,12 @@ namespace tino {
 
         // read pixel data
         unsigned char c = 0;
-        // while (!ifs.eof()) {
         for (std::size_t i = 0; i < _n_train_data; i++) {
           ifs.read(reinterpret_cast<char*>(&c), sizeof(unsigned char));
           int idx = c;
           _train_labels(i, idx) = (T)1;
           c = 0;
         }
-        //}
 
         return true;
       }
@@ -107,27 +105,11 @@ namespace tino {
       , _train_labels(_n_train_data, _n_classes) {
         read_images(train_image_path);
         read_labels(train_label_path);
-        // generate(_train_inputs, _train_labels);
       }
 
       bool generate(tensor2d<T>& train_inputs, tensor2d<T>& train_labels) {
-        /*
-                if (!check_args(train_inputs, train_labels))
-                  return false;
-
-                std::random_device rnd;
-                std::mt19937 mt(rnd());
-                std::uniform_int_distribution<> dist(0, 1);
-
-                for (std::size_t i = 0; i < train_inputs.template shape<1>(); i++) {
-                  const auto x1 = dist(mt);
-                  const auto x2 = dist(mt);
-                  const auto l1 = x1 == x2 ? 0 : 1;
-                  train_inputs(i, 0) = x1;
-                  train_inputs(i, 1) = x2;
-                  train_labels(i, 0) = l1;
-                }
-                */
+        TINO_MAYBE_UNUSED(train_inputs);
+        TINO_MAYBE_UNUSED(train_labels);
         return true;
       }
 

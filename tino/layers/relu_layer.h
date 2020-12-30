@@ -45,10 +45,12 @@ namespace tino {
 
         if (!this->_next_layer) {
           using index_t = typename tensor2d<T>::index_t;
-          for (index_t i = 0; i < next_delta.template shape<1>(); i++)
+          utils::concurrent_for(ctx, next_delta.template shape<1>(), [&](index_t i) {
             for (index_t j = 0; j < next_delta.template shape<0>(); j++)
               this->_delta(i, j) = this->_out(i, j) - next_delta(i, j);
+          });
         }
+
         if (this->_prev_layer) {
           if (!this->_next_layer)
             this->_prev_layer->backward(this->_delta, ctx);

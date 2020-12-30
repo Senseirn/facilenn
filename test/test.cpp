@@ -17,15 +17,6 @@ int main() {
   net.add(new softmax_layer());
 
   // define how to initialize weights
-  /*
-    net.weight_initializer([](tensor2d<float>& x) {
-      std::random_device rnd;
-      std::mt19937 mt(rnd());
-      std::uniform_real_distribution<> rand(-0.5, 0.5);
-      for (auto& e : x)
-        e = rand(mt);
-    });
-  */
   // here we use He initializer
   net.weight_initializer(initializers::He<TINO_FLOAT_TYPE>);
 
@@ -46,12 +37,6 @@ int main() {
 
   mnist_generator mnist("../../data/mnist/train-images-idx3-ubyte", "../../data/mnist/train-labels-idx1-ubyte");
 
-  // auto& data = mnist.train_inputs();
-  /*
-   for (auto e : data) {
-     std::cout << e << std::endl;
-   }
-   */
   // run train
   //  net.train<loss_t::mse>(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);
   net.train<loss_t::cross_entropy>(mnist.train_inputs(), mnist.train_labels(), n_epochs, n_batchsize, adam);

@@ -34,11 +34,7 @@ namespace tino {
           for (index_t j = 0; j < in.template shape<0>(); j++)
             out(i, j) = in(i, j) > (T)0 ? in(i, j) : (T)0;
         });
-        /*
-                for (index_t i = 0; i < in.template shape<1>(); i++)
-                  for (index_t j = 0; j < in.template shape<0>(); j++)
-                    out(i, j) = in(i, j) > (T)0 ? in(i, j) : (T)0;
-        */
+
         TINO_MAYBE_UNUSED(ctx);
 
         return out;
@@ -63,13 +59,6 @@ namespace tino {
           for (index_t j = 0; j < in.template shape<0>(); j++)
             delta(i, j) = (in(i, j) > (T)0 ? next_delta(i, j) : (T)0);
         });
-
-        /*
-                for (index_t i = 0; i < in.template shape<1>(); i++)
-                  for (index_t j = 0; j < in.template shape<0>(); j++)
-                    delta(i, j) = (in(i, j) > (T)0 ? next_delta(i, j) : (T)0);
-                    */
-        //* next_delta(i, j);
 
         TINO_MAYBE_UNUSED(ctx);
 
