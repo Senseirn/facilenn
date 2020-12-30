@@ -8,6 +8,6 @@ branches:
 script:
   - cd test/build
   - bash ../../data/mnist/prepare_mnist_dataset.sh
-  - cmake ..
+  - cmake .. -DCMAKE_BUILD_TYPE=Release
   - make
   - ./test.out
