@@ -37,8 +37,8 @@ int main() {
   adam.alpha(0.001f);
 
   // run 10 epochs with batch_size=10
-  int n_epochs = 50;
-  int n_batchsize = 50;
+  int n_epochs = 1;
+  int n_batchsize = 100;
 
   // generate xor dataset which contains 1,000 pairs of input and label
   xor_generator generator(1000);
