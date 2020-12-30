@@ -30,10 +30,11 @@ namespace tino {
       void He(tensor2d<T>& weights) {
         std::random_device rnd;
         std::mt19937 mt(rnd());
-        std::normal_distribution<> rand(0.f, 0.1f);
         const T sn = std::sqrt(2.f / weights.template shape<1>());
+        std::normal_distribution<> rand(0.f, sn);
+        //  const T sn = std::sqrt(2.f / weights.template shape<1>());
         for (auto& e : weights) {
-          e = rand(mt) / sn;
+          e = rand(mt);
         }
       }
     } // namespace initializers

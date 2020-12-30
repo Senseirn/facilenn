@@ -41,3 +41,7 @@
 
 test/build/*
 !test/build/.keep
+
+data/*/*
+!data/*/.keep
+!data/*/*.sh

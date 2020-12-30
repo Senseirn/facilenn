@@ -44,7 +44,10 @@ namespace tino {
         layer->set_optimizer(optimizer());
     }
 
-    T calc_loss(tensor2d<T>& label, core::context& ctx) { return loss::mse<T>::f(_net.back()->out(), label, ctx); }
+    T calc_loss(tensor2d<T>& label, core::context& ctx) {
+      // return loss::mse<T>::f(_net.back()->out(), label, ctx);
+      return loss::cross_entropy<T>::f(_net.back()->out(), label, ctx);
+    }
 
     void forward(tensor2d<T>& input, core::context& ctx) { _net.front()->forward(input, ctx); }
 
@@ -102,16 +105,44 @@ namespace tino {
       for (std::size_t epoch = 1; epoch <= n_epochs; epoch++) {
         std::cout << "epoch: " << epoch << std::endl;
         T loss = 0;
+        T accuracy = 0;
+        int correct_count = 0;
         for (std::size_t batch_idx = 0; batch_idx < n_minibatchs; batch_idx++) {
           forward(train_inputs_batched[batch_idx], ctx);
           loss += calc_loss(train_labels_batched[batch_idx], ctx);
           backward(train_labels_batched[batch_idx], ctx);
 
-          std::cout << batch_idx << ": input: " << train_inputs_batched[batch_idx](0, 0) << " "
-                    << train_inputs_batched[batch_idx](0, 1) << " " << train_labels_batched[batch_idx](0, 0) << " "
-                    << _net.back()->out()(0, 0) << " " << std::endl;
+          /*
+                    std::cout << batch_idx << ": input: " << train_inputs_batched[batch_idx](0, 0) << " "
+                              << train_inputs_batched[batch_idx](0, 1) << " " << train_labels_batched[batch_idx](0, 0)
+             << " "
+                              << _net.back()->out()(0, 0) << " " << std::endl;
+                              */
+
+          for (int b = 0; b < n_batchsize; b++) {
+            int idx = -1;
+            int max_idx = -1;
+            T maximum = std::numeric_limits<T>::lowest();
+            for (int i = 0; i < 10; i++) {
+              if (train_labels_batched[batch_idx](b, i) > 0.99) {
+                idx = i;
+              }
+            }
+            for (int i = 0; i < 10; i++) {
+              if (_net.back()->out()(b, i) > maximum) {
+                max_idx = i;
+                maximum = _net.back()->out()(b, i);
+              }
+            }
+            if (idx == max_idx) {
+              correct_count++;
+            }
+          }
         }
         std::cout << "loss: " << loss / (n_minibatchs * train_inputs_batched[0].template shape<1>()) << std::endl;
+        std::cout << "acc: "
+                  << (float)correct_count / (n_minibatchs * train_inputs_batched[0].template shape<1>()) * 100 << " %"
+                  << std::endl;
       }
     }
 
