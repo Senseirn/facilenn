@@ -89,7 +89,7 @@ namespace tino {
                core::context& ctx) {
       using namespace tino::core;
       using namespace tino::backends;
-      context ctx(backend_t::naive, stages::train);
+      ctx.stage(stages::train);
 
       if (!_is_initialized) {
         // weight initialize function

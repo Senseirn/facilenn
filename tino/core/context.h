@@ -40,6 +40,10 @@ namespace tino {
       bool is_train() { return _stage == stages::train; }
       bool is_infer() { return !is_train(); }
       stages current_stage() { return _stage; }
+      context& stage(const stages stage) {
+        _stage = stage;
+        return *this;
+      }
       context& set_stage(const stages stage) {
         _stage = stage;
         return *this;
