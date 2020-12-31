@@ -4,6 +4,7 @@ int main() {
   using namespace tino;
   using namespace tino::layers;
   using namespace tino::core;
+  using namespace tino::backends;
   using namespace tino::utils;
   using namespace tino::loss;
 
@@ -39,8 +40,10 @@ int main() {
 
   //cifar10_loader cifar10("../../data/cifar10");
 
+  context ctx(backend_t::naive, parallelize_t::none);
+
   // run train
   //  net.train<loss_t::mse>(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);
-  net.train<loss_t::cross_entropy>(mnist.train_inputs(), mnist.train_labels(), n_epochs, n_batchsize, adam);
+  net.train<loss_t::cross_entropy>(mnist.train_inputs(), mnist.train_labels(), n_epochs, n_batchsize, adam, ctx);
   // net.train<loss_t::cross_entropy>(cifar10.train_inputs(), cifar10.train_labels(), n_epochs, n_batchsize, adam);
 }

@@ -85,7 +85,8 @@ namespace tino {
                tensor2d<T>& train_labels,
                std::size_t n_epochs,
                std::size_t n_batchsize,
-               const Optimizer& optimizer) {
+               const Optimizer& optimizer,
+               core::context& ctx) {
       using namespace tino::core;
       using namespace tino::backends;
       context ctx(backend_t::naive, stages::train);
