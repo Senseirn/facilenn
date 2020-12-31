@@ -1,23 +1,6 @@
 #pragma once
 
-// check if OpenMP is availale.
-// abort compilation when -fopenmp flag is not set.
-#ifdef TINO_USE_OPENMP
-#ifndef _OPENMP
-#error TINO_USE_OPENMP is defined but OpenMP is not enabled. nplease re-compile with -fopenmp flag
-#else
-#define TINO_OPENMP_READY 1
-#include <omp.h>
-#endif
-#endif
-
-// check if intel tbb is available.
-#ifdef TINO_USE_INTEL_TBB
-#define TINO_INTEL_TBB_READY 1
-
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#endif
+#include "tino/backends/backend_types.h"
 
 /*
 // if both of OpenMP and intel tbb define, abort!
