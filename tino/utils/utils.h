@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "tino/utils/datasets/cifar10.h"
 #include "tino/utils/datasets/mnist.h"
 #include "tino/utils/datasets/xor.h"
 #include "tino/utils/macros.h"

@@ -9,11 +9,11 @@ int main() {
 
   // define network
   tino::network net;
-  net.add(new fully_connected_layer(28 * 28, 64 * 3));
+  net.add(new fully_connected_layer(3 * 32 * 32, 512));
   net.add(new relu_layer());
-  net.add(new fully_connected_layer(64 * 3, 32 * 4));
+  net.add(new fully_connected_layer(512, 256));
   net.add(new relu_layer());
-  net.add(new fully_connected_layer(32 * 4, 10));
+  net.add(new fully_connected_layer(256, 10));
   net.add(new softmax_layer());
 
   // define how to initialize weights
@@ -29,15 +29,18 @@ int main() {
   adam.alpha(0.001f);
 
   // run 10 epochs with batch_size=10
-  int n_epochs = 1;
+  int n_epochs = 20;
   int n_batchsize = 200;
 
   // generate xor dataset which contains 1,000 pairs of input and label
   xor_loader generator(1000);
 
-  mnist_loader mnist("../../data/mnist/train-images-idx3-ubyte", "../../data/mnist/train-labels-idx1-ubyte");
+  //mnist_loader mnist("../../data/mnist/train-images-idx3-ubyte", "../../data/mnist/train-labels-idx1-ubyte");
+
+  cifar10_loader cifar10("../../data/cifar10");
 
   // run train
   //  net.train<loss_t::mse>(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);
-  net.train<loss_t::cross_entropy>(mnist.train_inputs(), mnist.train_labels(), n_epochs, n_batchsize, adam);
+  // net.train<loss_t::cross_entropy>(mnist.train_inputs(), mnist.train_labels(), n_epochs, n_batchsize, adam);
+  net.train<loss_t::cross_entropy>(cifar10.train_inputs(), cifar10.train_labels(), n_epochs, n_batchsize, adam);
 }
