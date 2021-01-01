@@ -10,11 +10,11 @@ int main() {
 
   // define network
   tino::network net;
-  net.add(new fully_connected_layer(1 * 28 * 28, 256));
+  net.add(new fully_connected_layer(1 * 28 * 28, 32));
   net.add(new relu_layer());
-  net.add(new fully_connected_layer(256, 128));
+  net.add(new fully_connected_layer(32, 16));
   net.add(new relu_layer());
-  net.add(new fully_connected_layer(128, 10));
+  net.add(new fully_connected_layer(16, 10));
   net.add(new softmax_layer());
 
   // define how to initialize weights

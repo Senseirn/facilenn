@@ -42,7 +42,7 @@
 #ifdef TINO_USE_OPENBLAS
 #define TINO_OPENBLAS_READY 1
 #endif
-
+#include "tino/backends/blas/blas_wrappers.h"
 #endif
 
 namespace tino {
