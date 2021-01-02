@@ -1,3 +1,10 @@
+dist: focal
+addons:
+  apt:
+    packages:
+      - libomp-dev
+      - libtbb-dev
+
 language: cpp
 compiler:
   - gcc
@@ -5,6 +12,7 @@ branches:
   only:
     - master
     - develop
+    - feature/fix_ci
 script:
   - cd test/build
   - bash ../../data/mnist/prepare_mnist_dataset.sh

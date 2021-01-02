@@ -171,8 +171,6 @@ namespace tino {
         std::fill(std::begin(delta), std::end(delta), (T)0);
         std::fill(std::begin(delta_weight), std::end(delta_weight), (T)0);
 
-        using index_t = std::size_t;
-
         blas::blasOpts<T> opts;
         opts.alpha = (T)1;
         opts.beta = (T)0;
@@ -187,23 +185,6 @@ namespace tino {
         opts.trans_b = blas::trans_t::NoTrans;
         blas::blas_gemm(ctx, opts, in, next_delta, delta_weight);
 
-        /*
-        utils::concurrent_for(ctx, next_delta.template shape<1>(), [&](index_t i) {
-          for (index_t j = 0; j < weight.template shape<1>(); j++)
-            for (index_t k = 0; k < next_delta.template shape<0>(); k++)
-              delta(i, j) += next_delta(i, k) * weight(j, k);
-        });
-        */
-
-        /*
-                utils::concurrent_for(ctx, in.template shape<0>(), [&](index_t i) {
-                  for (index_t j = 0; j < next_delta.template shape<0>(); j++) {
-                    for (index_t k = 0; k < in.template shape<1>(); k++)
-                      delta_weight(i, j) += in(k, i) * next_delta(k, j);
-                    delta_weight(i, j) /= in.template shape<1>();
-                  }
-                });
-        */
         TINO_MAYBE_UNUSED(delta_bias);
         TINO_MAYBE_UNUSED(ctx);
 

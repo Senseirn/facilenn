@@ -2,16 +2,16 @@
 
 #include "tino/backends/backends.h"
 #include "tino/backends/tensor_wrappers.h"
+#include "tino/utils/macros.h"
 
 #ifdef TINO_OPENBLAS_READY
 #include <cblas.h>
 #endif
 
-namespace tino::core {
-  class context;
-}
-
 namespace tino {
+  namespace core {
+    class context;
+  }
   namespace backends {
     namespace blas {
       enum class layout_t {
@@ -78,6 +78,12 @@ namespace tino {
         std::cerr << "invalid backend: OpenBLAS" << std::endl;
         std::exit(1);
 #endif
+
+        TINO_MAYBE_UNUSED(ctx);
+        TINO_MAYBE_UNUSED(blas_opts);
+        TINO_MAYBE_UNUSED(A);
+        TINO_MAYBE_UNUSED(B);
+        TINO_MAYBE_UNUSED(C);
 
         return C;
       }

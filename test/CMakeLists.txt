@@ -16,3 +16,6 @@ endif()
 
 add_executable(test.out test.cpp)
 target_include_directories(test.out PRIVATE ../)
+
+add_executable(test_openblas.out test_openblas.cpp)
+target_include_directories(test_openblas.out PRIVATE ../)
