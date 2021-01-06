@@ -10,11 +10,11 @@ int main() {
 
   // define network
   tino::network net;
-  net.add(new fully_connected_layer(1 * 28 * 28, 512));
+  net.add(new fully_connected_layer(1 * 28 * 28, 16));
   net.add(new relu_layer());
-  net.add(new fully_connected_layer(512, 256));
+  net.add(new fully_connected_layer(16, 16));
   net.add(new relu_layer());
-  net.add(new fully_connected_layer(256, 10));
+  net.add(new fully_connected_layer(16, 10));
   net.add(new softmax_layer());
 
   // define how to initialize weights
@@ -37,7 +37,7 @@ int main() {
 
   //cifar10_loader cifar10("../../data/cifar10");
 
-  context ctx(backend_t::naive, parallelize_t::none);
+  context ctx(backend_t::naive, parallelize_t::openmp);
 
   // run train
   //  net.train<loss_t::mse>(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);

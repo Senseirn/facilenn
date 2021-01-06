@@ -18,4 +18,4 @@ script:
   - bash ../../data/mnist/prepare_mnist_dataset.sh
   - cmake .. -DCMAKE_BUILD_TYPE=Release
   - make
-  - ./test.out
+  - ./test_naive.out

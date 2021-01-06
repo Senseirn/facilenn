@@ -14,8 +14,8 @@ if(OpenMP_FOUND)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
-add_executable(test.out test.cpp)
-target_include_directories(test.out PRIVATE ../)
+add_executable(test_naive.out test_naive.cpp)
+target_include_directories(test_naive.out PRIVATE ../)
 
 add_executable(test_openblas.out test_openblas.cpp)
 target_include_directories(test_openblas.out PRIVATE ../)
