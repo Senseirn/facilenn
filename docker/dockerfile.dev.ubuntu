@@ -26,5 +26,4 @@ RUN apt-get install -y \
 RUN apt-get install -y  \
   libomp-dev            \
   libtbb-dev            \
-  libopenblas-base      \
-  libopenblas-dev    
+  libopenblas-openmp-dev
