@@ -65,6 +65,7 @@ if(USE_INTEL_TBB)
   if(TBB_FOUND)
     message(STATUS "Found Intel TBB")
     message(STATUS "Intel TBB Version: ${TBB_VERSION}")
+    add_compile_definitions(TINO_USE_INTEL_TBB)
   endif()
 endif()
 
@@ -75,7 +76,7 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g3 -Og -pg ${CMAKE_CXX_FLAGS}")
 set(CMAKE_CXX_FLAGS_MINSIZEREL
     "-Os -s -DNDEBUG -march=native ${CMAKE_CXX_FLAGS}")
 
-add_executable(test_all_in_one.out test_naive.cpp)
+add_executable(test_all_in_one.out test_all_in_one.cpp)
 target_include_directories(test_all_in_one.out PRIVATE ../
                                                        ${OPENBLAS_INCLUDE_DIR})
 target_link_libraries(test_all_in_one.out tbb ${OPENBLAS_LIBRARY})
