@@ -20,7 +20,8 @@ namespace tino {
       // actual implementations
       template <typename T>
       tensor2d<T>& relu_activation_forward_kernel(tensor2d<T>& in, tensor2d<T>& out, context& ctx) {
-        if (ctx.backend() == backend_t::naive)
+        // currently all backend is fallback to naive
+        if (ctx.backend() == backend_t::naive || 1)
           return relu_activation_forward_kernel_naive(in, out, ctx);
 
         return out;
@@ -43,7 +44,8 @@ namespace tino {
       template <typename T>
       tensor2d<T>&
       relu_activation_backward_kernel(tensor2d<T>& in, tensor2d<T>& delta, tensor2d<T>& next_delta, context& ctx) {
-        if (ctx.backend() == backend_t::naive)
+        // currently all backend is fallback to naive
+        if (ctx.backend() == backend_t::naive || 1)
           return relu_activation_backward_kernel_naive(in, delta, next_delta, ctx);
 
         return delta;

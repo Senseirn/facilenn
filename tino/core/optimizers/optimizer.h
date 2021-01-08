@@ -71,7 +71,8 @@ namespace tino {
 
         void optimize(tensor2d<T>& weight, tensor2d<T>& delta_weight, context& ctx) override {
           using index_t = std::size_t;
-          for (index_t i = 0; i < weight.template shape<1>(); i++) {
+
+          utils::concurrent_for(ctx, weight.template shape<1>(), [&](index_t i) {
             for (index_t j = 0; j < weight.template shape<0>(); j++) {
               _mt(i, j) = _b1 * _mt(i, j) + ((T)1 - _b1) * delta_weight(i, j);
               _vt(i, j) = _b2 * _vt(i, j) + ((T)1 - _b2) * delta_weight(i, j) * delta_weight(i, j);
@@ -81,7 +82,7 @@ namespace tino {
               _b1_t *= _b1;
               _b2_t *= _b2;
             }
-          }
+          });
 
           TINO_MAYBE_UNUSED(ctx);
         }
