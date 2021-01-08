@@ -4,6 +4,7 @@ addons:
     packages:
       - libomp-dev
       - libtbb-dev
+      - libopenblas-openmp-dev
 
 language: cpp
 compiler:
@@ -16,6 +17,6 @@ branches:
 script:
   - cd test/build
   - bash ../../data/mnist/prepare_mnist_dataset.sh
-  - cmake -DCMAKE_BUILD_TYPE=Release -DUSE_OPENMP=ON ..
+  - cmake -DCMAKE_BUILD_TYPE=Release -DUSE_OPENMP=ON -DUSE_OPENBLAS=ON -DUSE_INTEL_TBB=ON ..
   - make
   - ./test_all_in_one.out
