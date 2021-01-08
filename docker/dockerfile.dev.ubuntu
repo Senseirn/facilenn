@@ -1,0 +1,30 @@
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN sed -i.bak -e "s%http://[^ ]\+%http://ftp.jaist.ac.jp/pub/Linux/ubuntu/%g" /etc/apt/sources.list
+
+# install basic packages
+RUN apt-get update && apt-get install -y \
+  tzdata
+
+ENV TZ=Asia/Tokyo
+
+RUN apt-get install -y \
+  build-essential       \
+  cmake                 \
+  wget                  \
+  curl                  \
+  git                   \
+  vim                   \
+  gcc                   \
+  g++                   \
+  clang                 \
+  make                  
+
+# install libraries
+RUN apt-get install -y  \
+  libomp-dev            \
+  libtbb-dev            \
+  libopenblas-base      \
+  libopenblas-dev    

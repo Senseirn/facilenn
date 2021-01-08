@@ -37,7 +37,7 @@ int main() {
 
   //cifar10_loader cifar10("../../data/cifar10");
 
-  context ctx(backend_t::naive, parallelize_t::openmp);
+  context ctx(backend_t::openblas, parallelize_t::intel_tbb);
 
   // run train
   //  net.train<loss_t::mse>(generator.train_inputs(), generator.train_labels(), n_epochs, n_batchsize, adam);
