@@ -45,3 +45,6 @@ test/build/*
 data/*/*
 !data/*/.keep
 !data/*/*.sh
+
+build
+buiid/*
