@@ -16,10 +16,7 @@ namespace tino {
       tensor2d<T>& softmax_activation_forward_kernel_naive(tensor2d<T>& in, tensor2d<T>& out, context& ctx);
 
       template <typename T>
-      tensor2d<T>& softmax_activation_backward_kernel_naive(tensor2d<T>& in,
-                                                            tensor2d<T>& delta,
-                                                            tensor2d<T>& next_delta,
-                                                            context& ctx);
+      tensor2d<T>& softmax_activation_backward_kernel_naive(tensor2d<T>& in, tensor2d<T>& delta, tensor2d<T>& next_delta, context& ctx);
 
       // actual implementations
       template <typename T>
@@ -36,7 +33,7 @@ namespace tino {
         using index_t = std::size_t;
 
         utils::concurrent_for(ctx, in.template shape<1>(), [&](index_t i) {
-          T accum = (T)0;
+          T accum   = (T)0;
           T maximum = std::numeric_limits<T>::lowest();
           for (index_t j = 0; j < in.template shape<0>(); j++)
             maximum = std::max(maximum, in(i, j));
@@ -54,8 +51,7 @@ namespace tino {
       }
 
       template <typename T>
-      tensor2d<T>&
-      softmax_activation_backward_kernel(tensor2d<T>& in, tensor2d<T>& delta, tensor2d<T>& next_delta, context& ctx) {
+      tensor2d<T>& softmax_activation_backward_kernel(tensor2d<T>& in, tensor2d<T>& delta, tensor2d<T>& next_delta, context& ctx) {
         // currently all backend is fallback to naive
         if (ctx.backend() == backend_t::naive || 1)
           return softmax_activation_backward_kernel_naive(in, delta, next_delta, ctx);
@@ -64,10 +60,7 @@ namespace tino {
       }
 
       template <typename T>
-      tensor2d<T>& softmax_activation_backward_kernel_naive(tensor2d<T>& in,
-                                                            tensor2d<T>& delta,
-                                                            tensor2d<T>& next_delta,
-                                                            context& ctx) {
+      tensor2d<T>& softmax_activation_backward_kernel_naive(tensor2d<T>& in, tensor2d<T>& delta, tensor2d<T>& next_delta, context& ctx) {
 
         TINO_MAYBE_UNUSED(in);
         TINO_MAYBE_UNUSED(delta);

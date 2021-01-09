@@ -12,17 +12,11 @@ namespace tino {
 
       // forward declarations
       template <typename T>
-      tensor2d<T>& fully_connected_forward_kernel_naive(tensor2d<T>& in,
-                                                        tensor2d<T>& weight,
-                                                        tensor2d<T>& bias,
-                                                        tensor2d<T>& out,
-                                                        context& ctx);
+      tensor2d<T>&
+      fully_connected_forward_kernel_naive(tensor2d<T>& in, tensor2d<T>& weight, tensor2d<T>& bias, tensor2d<T>& out, context& ctx);
       template <typename T>
-      tensor2d<T>& fully_connected_forward_kernel_blas(tensor2d<T>& in,
-                                                       tensor2d<T>& weight,
-                                                       tensor2d<T>& bias,
-                                                       tensor2d<T>& out,
-                                                       context& ctx);
+      tensor2d<T>&
+      fully_connected_forward_kernel_blas(tensor2d<T>& in, tensor2d<T>& weight, tensor2d<T>& bias, tensor2d<T>& out, context& ctx);
 
       template <typename T>
       tensor2d<T>& fully_connected_backward_kernel_naive(tensor2d<T>& in,
@@ -44,11 +38,7 @@ namespace tino {
 
       // actual implementations
       template <typename T>
-      tensor2d<T>& fully_connected_forward_kernel(tensor2d<T>& in,
-                                                  tensor2d<T>& weight,
-                                                  tensor2d<T>& bias,
-                                                  tensor2d<T>& out,
-                                                  context& ctx) {
+      tensor2d<T>& fully_connected_forward_kernel(tensor2d<T>& in, tensor2d<T>& weight, tensor2d<T>& bias, tensor2d<T>& out, context& ctx) {
         if (ctx.backend() == backend_t::naive)
           return fully_connected_forward_kernel_naive(in, weight, bias, out, ctx);
         else if (ctx.backend() == backend_t::openblas)
@@ -58,11 +48,8 @@ namespace tino {
       }
 
       template <typename T>
-      tensor2d<T>& fully_connected_forward_kernel_naive(tensor2d<T>& in,
-                                                        tensor2d<T>& weight,
-                                                        tensor2d<T>& bias,
-                                                        tensor2d<T>& out,
-                                                        context& ctx) {
+      tensor2d<T>&
+      fully_connected_forward_kernel_naive(tensor2d<T>& in, tensor2d<T>& weight, tensor2d<T>& bias, tensor2d<T>& out, context& ctx) {
         std::fill(std::begin(out), std::end(out), (T)0);
 
         using index_t = std::size_t;
@@ -83,19 +70,16 @@ namespace tino {
       }
 
       template <typename T>
-      tensor2d<T>& fully_connected_forward_kernel_blas(tensor2d<T>& in,
-                                                       tensor2d<T>& weight,
-                                                       tensor2d<T>& bias,
-                                                       tensor2d<T>& out,
-                                                       context& ctx) {
+      tensor2d<T>&
+      fully_connected_forward_kernel_blas(tensor2d<T>& in, tensor2d<T>& weight, tensor2d<T>& bias, tensor2d<T>& out, context& ctx) {
         std::fill(std::begin(out), std::end(out), (T)0);
 
         using index_t = std::size_t;
 
         blas::blasOpts<T> opts;
-        opts.alpha = (T)1;
-        opts.beta = (T)0;
-        opts.layout = blas::layout_t::RowMajor;
+        opts.alpha   = (T)1;
+        opts.beta    = (T)0;
+        opts.layout  = blas::layout_t::RowMajor;
         opts.trans_a = blas::trans_t::NoTrans;
         opts.trans_b = blas::trans_t::NoTrans;
 
@@ -172,15 +156,15 @@ namespace tino {
         std::fill(std::begin(delta_weight), std::end(delta_weight), (T)0);
 
         blas::blasOpts<T> opts;
-        opts.alpha = (T)1;
-        opts.beta = (T)0;
-        opts.layout = blas::layout_t::RowMajor;
+        opts.alpha   = (T)1;
+        opts.beta    = (T)0;
+        opts.layout  = blas::layout_t::RowMajor;
         opts.trans_a = blas::trans_t::NoTrans;
         opts.trans_b = blas::trans_t::Trans;
 
         blas::blas_gemm(ctx, opts, next_delta, weight, delta);
 
-        opts.alpha = (T)1 / in.template shape<1>();
+        opts.alpha   = (T)1 / in.template shape<1>();
         opts.trans_a = blas::trans_t::Trans;
         opts.trans_b = blas::trans_t::NoTrans;
         blas::blas_gemm(ctx, opts, in, next_delta, delta_weight);

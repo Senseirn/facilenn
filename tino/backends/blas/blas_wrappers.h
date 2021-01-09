@@ -16,7 +16,7 @@ namespace tino {
     namespace blas {
       enum class layout_t {
 #ifdef TINO_OPENBLAS_READY
-        RowMajor = CblasRowMajor,
+        RowMajor    = CblasRowMajor,
         ColumnMajor = CblasColMajor
 #else
         RowMajor,
@@ -26,7 +26,7 @@ namespace tino {
       enum class trans_t {
 #ifdef TINO_OPENBLAS_READY
         NoTrans = CblasNoTrans,
-        Trans = CblasTrans
+        Trans   = CblasTrans
 #else
         NoTrans,
         Trans
@@ -35,27 +35,23 @@ namespace tino {
 
       template <typename T>
       struct blasOpts {
-        T alpha = (T)0;
-        T beta = (T)0;
+        T alpha         = (T)0;
+        T beta          = (T)0;
         layout_t layout = layout_t::RowMajor;
         trans_t trans_a = trans_t::NoTrans;
         trans_t trans_b = trans_t::NoTrans;
       };
 
       template <typename T>
-      tensor2d<T>&
-      blas_gemm(core::context& ctx, const blasOpts<T>& blas_opts, tensor2d<T>& A, tensor2d<T>& B, tensor2d<T>& C) {}
+      tensor2d<T>& blas_gemm(core::context& ctx, const blasOpts<T>& blas_opts, tensor2d<T>& A, tensor2d<T>& B, tensor2d<T>& C) {}
 
       template <>
-      tensor2d<float>& blas_gemm(core::context& ctx,
-                                 const blasOpts<float>& blas_opts,
-                                 tensor2d<float>& A,
-                                 tensor2d<float>& B,
-                                 tensor2d<float>& C) {
+      tensor2d<float>&
+      blas_gemm(core::context& ctx, const blasOpts<float>& blas_opts, tensor2d<float>& A, tensor2d<float>& B, tensor2d<float>& C) {
 #ifdef TINO_OPENBLAS_READY
-        const int M = blas_opts.trans_a == trans_t::NoTrans ? A.template shape<1>() : A.template shape<0>();
-        const int N = blas_opts.trans_b == trans_t::NoTrans ? B.template shape<0>() : B.template shape<1>();
-        const int K = blas_opts.trans_a == trans_t::NoTrans ? A.template shape<0>() : A.template shape<1>();
+        const int M   = blas_opts.trans_a == trans_t::NoTrans ? A.template shape<1>() : A.template shape<0>();
+        const int N   = blas_opts.trans_b == trans_t::NoTrans ? B.template shape<0>() : B.template shape<1>();
+        const int K   = blas_opts.trans_a == trans_t::NoTrans ? A.template shape<0>() : A.template shape<1>();
         const int lda = blas_opts.trans_a == trans_t::NoTrans ? K : M;
         const int ldb = blas_opts.trans_b == trans_t::NoTrans ? N : K;
         const int ldc = N;

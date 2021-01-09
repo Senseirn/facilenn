@@ -68,7 +68,7 @@ namespace tino {
       virtual tensor2d<T>& delta_weight() { return _delta_weight; }
       virtual tensor2d<T>& delta_bias() { return _delta_bias; }
 
-      virtual tensor2d<T>& forward(tensor2d<T>&, core::context&) = 0;
+      virtual tensor2d<T>& forward(tensor2d<T>&, core::context&)  = 0;
       virtual tensor2d<T>& backward(tensor2d<T>&, core::context&) = 0;
       virtual tensor2d<T>& optimize(tensor2d<T>&, core::context&) = 0;
 

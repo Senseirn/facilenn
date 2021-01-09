@@ -15,11 +15,11 @@ namespace tino {
     class mnist_loader_ : public dataset_loader<T> {
      private:
       const std::size_t _n_train_data = 60000;
-      const std::size_t _n_test_data = 10000;
-      const std::size_t _image_width = 28;
+      const std::size_t _n_test_data  = 10000;
+      const std::size_t _image_width  = 28;
       const std::size_t _image_height = 28;
-      const std::size_t _image_ch = 1;
-      const std::size_t _n_classes = 10;
+      const std::size_t _image_ch     = 1;
+      const std::size_t _n_classes    = 10;
 
       tensor2d<T> _train_inputs;
       tensor2d<T> _train_labels;
@@ -91,9 +91,9 @@ namespace tino {
         unsigned char c = 0;
         for (std::size_t i = 0; i < _n_train_data; i++) {
           ifs.read(reinterpret_cast<char*>(&c), sizeof(unsigned char));
-          int idx = c;
+          int idx               = c;
           _train_labels(i, idx) = (T)1;
-          c = 0;
+          c                     = 0;
         }
 
         return true;
@@ -118,7 +118,7 @@ namespace tino {
 
       ~mnist_loader_() {}
     }; // namespace utils
-    using mnist_loader = mnist_loader_<TINO_FLOAT_TYPE>;
+    using mnist_loader         = mnist_loader_<TINO_FLOAT_TYPE>;
     using fashion_mnist_loader = mnist_loader_<TINO_FLOAT_TYPE>;
   } // namespace utils
 } // namespace tino

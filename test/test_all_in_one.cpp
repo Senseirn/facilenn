@@ -30,7 +30,7 @@ int main() {
     adam.alpha(0.001f);
 
     // run 10 epochs with batch_size 200
-    int n_epochs = 1;
+    int n_epochs    = 1;
     int n_batchsize = 200;
 
     mnist_loader mnist("../../data/mnist/train-images-idx3-ubyte", "../../data/mnist/train-labels-idx1-ubyte");
@@ -46,9 +46,7 @@ int main() {
       end = std::chrono::system_clock::now();
 
       std::cout << "Finish train with [backend = naive, parallelization = none]" << std::endl;
-      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f
-                << "s\n"
-                << std::endl;
+      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f << "s\n" << std::endl;
     }
 
     {
@@ -61,9 +59,7 @@ int main() {
       end = std::chrono::system_clock::now();
 
       std::cout << "Finish train with [backend = naive, parallelization = openmp]" << std::endl;
-      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f
-                << "s\n"
-                << std::endl;
+      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f << "s\n" << std::endl;
     }
 
     {
@@ -76,9 +72,7 @@ int main() {
       end = std::chrono::system_clock::now();
 
       std::cout << "Finish train with [backend = naive, parallelization = intel_tbb]" << std::endl;
-      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f
-                << "s\n"
-                << std::endl;
+      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f << "s\n" << std::endl;
     }
 
     ctx.backend(backend_t::openblas);
@@ -93,9 +87,7 @@ int main() {
       end = std::chrono::system_clock::now();
 
       std::cout << "Finish train with [backend = openblas, parallelization = none]" << std::endl;
-      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f
-                << "s\n"
-                << std::endl;
+      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f << "s\n" << std::endl;
     }
 
     {
@@ -108,9 +100,7 @@ int main() {
       end = std::chrono::system_clock::now();
 
       std::cout << "Finish train with [backend = openblas, parallelization = openmp]" << std::endl;
-      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f
-                << "s\n"
-                << std::endl;
+      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f << "s\n" << std::endl;
     }
 
     {
@@ -123,9 +113,7 @@ int main() {
       end = std::chrono::system_clock::now();
 
       std::cout << "Finish train with [backend = openblas, parallelization = intel tbb]" << std::endl;
-      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f
-                << "s\n"
-                << std::endl;
+      std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.f << "s\n" << std::endl;
     }
   }
 }

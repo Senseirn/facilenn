@@ -12,9 +12,9 @@ namespace tino {
       stages _stage;
 
      public:
-      context(const backends::backend_t& backend = backends::backend_t::naive,
+      context(const backends::backend_t& backend      = backends::backend_t::naive,
               const backends::parallelize_t& parallel = backends::parallelize_t::none,
-              const stages& stage = stages::train)
+              const stages& stage                     = stages::train)
       : _backend(backend)
       , _parallel(parallel)
       , _stage(stage) {}

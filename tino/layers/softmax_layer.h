@@ -46,8 +46,7 @@ namespace tino {
           if (!this->_next_layer)
             this->_prev_layer->backward(this->_delta, ctx);
           else
-            this->_prev_layer->backward(
-                op::softmax_activation_backward_kernel(this->_in, this->_delta, next_delta, ctx), ctx);
+            this->_prev_layer->backward(op::softmax_activation_backward_kernel(this->_in, this->_delta, next_delta, ctx), ctx);
         }
         if (!this->_next_layer)
           optimize(next_delta, ctx);
@@ -76,9 +75,9 @@ namespace tino {
 
         auto& out = this->_prev_layer->out();
 
-        this->_in_size = out.template shape<0>();
+        this->_in_size  = out.template shape<0>();
         this->_out_size = out.template shape<0>();
-        this->_n_batch = n_batch;
+        this->_n_batch  = n_batch;
         this->_in.reshape(this->_n_batch, this->_in_size);
         this->_out.reshape(this->_n_batch, this->_out_size);
         this->_delta.reshape(this->_n_batch, this->_out_size);

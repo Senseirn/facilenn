@@ -16,7 +16,7 @@ namespace tino {
    private:
     std::vector<std::unique_ptr<layers::abstract_layer<T>>> _net;
     std::function<void(tensor2d<T>&)> _weight_initializer;
-    bool _is_initialized = false;
+    bool _is_initialized                             = false;
     core::optimizers::optimizer_t _current_optimizer = core::optimizers::optimizer_t::none;
 
     void prepare_batched_data(tensor2d<T>& inputs,
@@ -70,8 +70,7 @@ namespace tino {
     template <typename F>
     bool initialize(F initializer, std::size_t n_batch = 1) {
       for (int i = 0; i < (int)_net.size(); i++)
-        _net[i]->make_connection(i == 0 ? nullptr : _net[i - 1].get(),
-                                 i == (int)_net.size() - 1 ? nullptr : _net[i + 1].get());
+        _net[i]->make_connection(i == 0 ? nullptr : _net[i - 1].get(), i == (int)_net.size() - 1 ? nullptr : _net[i + 1].get());
 
       for (auto& l : _net) {
         l->initialize(initializer, n_batch);
@@ -115,7 +114,7 @@ namespace tino {
 
       for (std::size_t epoch = 1; epoch <= n_epochs; epoch++) {
         std::cout << "epoch: " << epoch << std::endl;
-        T loss = 0;
+        T loss            = 0;
         int correct_count = 0;
         for (std::size_t batch_idx = 0; batch_idx < n_minibatchs; batch_idx++) {
           forward(train_inputs_batched[batch_idx], ctx);
@@ -132,9 +131,9 @@ namespace tino {
 
           if (1)
             for (int b = 0; b < (int)n_batchsize; b++) {
-              int idx = -1;
+              int idx     = -1;
               int max_idx = -1;
-              T maximum = std::numeric_limits<T>::lowest();
+              T maximum   = std::numeric_limits<T>::lowest();
               for (int i = 0; i < 10; i++) {
                 if (train_labels_batched[batch_idx](b, i) > 0.99) {
                   idx = i;
@@ -152,8 +151,7 @@ namespace tino {
             }
         }
         std::cout << "loss: " << loss / (n_minibatchs * train_inputs_batched[0].template shape<1>()) << std::endl;
-        std::cout << "acc: "
-                  << (float)correct_count / (n_minibatchs * train_inputs_batched[0].template shape<1>()) * 100 << " %"
+        std::cout << "acc: " << (float)correct_count / (n_minibatchs * train_inputs_batched[0].template shape<1>()) * 100 << " %"
                   << std::endl;
       }
     }

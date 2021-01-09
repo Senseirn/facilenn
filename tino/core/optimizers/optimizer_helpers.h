@@ -87,7 +87,7 @@ namespace tino {
         optimizer_t type() const { return optimizer_t::adam; }
       };
 
-      using SGD = SGD_<TINO_FLOAT_TYPE>;
+      using SGD  = SGD_<TINO_FLOAT_TYPE>;
       using Adam = Adam_<TINO_FLOAT_TYPE>;
     } // namespace optimizers
   }   // namespace core

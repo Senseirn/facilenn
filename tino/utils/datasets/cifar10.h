@@ -15,13 +15,13 @@ namespace tino {
     class cifar10_loader_ : public dataset_loader<T> {
      private:
       const std::size_t _n_train_data_per_bin = 10000;
-      const std::size_t _n_train_batch_bin = 5;
-      const std::size_t _n_total_train_data = _n_train_data_per_bin * _n_train_batch_bin;
-      const std::size_t _n_test_data = 10000;
-      const std::size_t _image_width = 32;
-      const std::size_t _image_height = 32;
-      const std::size_t _image_ch = 3;
-      const std::size_t _n_classes = 10;
+      const std::size_t _n_train_batch_bin    = 5;
+      const std::size_t _n_total_train_data   = _n_train_data_per_bin * _n_train_batch_bin;
+      const std::size_t _n_test_data          = 10000;
+      const std::size_t _image_width          = 32;
+      const std::size_t _image_height         = 32;
+      const std::size_t _image_ch             = 3;
+      const std::size_t _n_classes            = 10;
 
       tensor2d<T> _train_inputs;
       tensor2d<T> _train_labels;
@@ -61,19 +61,19 @@ namespace tino {
           }
 
           // read pixel data
-          unsigned char c = 0;
+          unsigned char c     = 0;
           unsigned char label = -1;
           for (std::size_t n = 0; n < _n_train_data_per_bin; n++) {
             ifs.read(reinterpret_cast<char*>(&label), sizeof(unsigned char));
-            int img_idx = n + bin_idx * _n_train_data_per_bin;
-            int label_idx = label;
+            int img_idx                       = n + bin_idx * _n_train_data_per_bin;
+            int label_idx                     = label;
             _train_labels(img_idx, label_idx) = (T)1;
             for (std::size_t ch = 0; ch < _image_ch; ch++) {
               for (std::size_t h = 0; h < _image_height; h++) {
                 for (std::size_t w = 0; w < _image_width; w++) {
                   ifs.read(reinterpret_cast<char*>(&c), sizeof(unsigned char));
                   _train_inputs(img_idx, ch * _image_height * _image_width + h * _image_width + w) = ((T)c / 255.f);
-                  c = 0;
+                  c                                                                                = 0;
                 }
               }
             }

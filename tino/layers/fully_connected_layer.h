@@ -26,9 +26,7 @@ namespace tino {
       : abstract_layer<T>(in_size, out_size, layer_types::fully_connected)
       , _optimizer(nullptr) {}
 
-      fully_connected_layer_(std::size_t in_size,
-                             std::size_t out_size,
-                             std::unique_ptr<abstract_optimizer_<T>>&& optimizer)
+      fully_connected_layer_(std::size_t in_size, std::size_t out_size, std::unique_ptr<abstract_optimizer_<T>>&& optimizer)
       : abstract_layer<T>(in_size, out_size, layer_types::fully_connected)
       , _optimizer(std::move(optimizer)) {}
 
@@ -39,8 +37,7 @@ namespace tino {
           this->_in = prev_out;
 
         if (this->_next_layer)
-          this->_next_layer->forward(
-              op::fully_connected_forward_kernel(this->_in, this->_weight, this->_bias, this->_out, ctx), ctx);
+          this->_next_layer->forward(op::fully_connected_forward_kernel(this->_in, this->_weight, this->_bias, this->_out, ctx), ctx);
 
         return this->_out;
       }
@@ -48,10 +45,9 @@ namespace tino {
       tensor2d<T>& backward(tensor2d<T>& next_delta, core::context& ctx) override {
 
         if (this->_prev_layer)
-          this->_prev_layer->backward(
-              op::fully_connected_backward_kernel(
-                  this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx),
-              ctx);
+          this->_prev_layer->backward(op::fully_connected_backward_kernel(
+                                          this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx),
+                                      ctx);
         else {
           op::fully_connected_backward_kernel(
               this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx);

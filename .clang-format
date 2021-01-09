@@ -90,7 +90,7 @@ BreakConstructorInitializersBeforeComma: true
 
 # The column limit.
 # A column limit of 0 means that there is no column limit. In this case, clang-format will respect the input’s line breaking decisions within statements unless they contradict other rules.
-ColumnLimit: 120
+ColumnLimit: 140
 
 # A regular expression that describes comments with special meaning, which should not be split into lines or otherwise changed.
 CommentPragmas: "\/*(.*)*\/"
@@ -245,4 +245,4 @@ AllowAllParametersOfDeclarationOnNextLine: false
 
 AllowShortCaseLabelsOnASingleLine: true
 
-#AlignConsecutiveAssignments: true
+AlignConsecutiveAssignments: true

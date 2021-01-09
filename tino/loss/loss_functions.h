@@ -17,7 +17,7 @@ namespace tino {
      public:
       static T f(tensor2d<T>& y, tensor2d<T>& t, core::context& ctx) {
         using index_t = typename tensor2d<T>::index_t;
-        T loss = 0;
+        T loss        = 0;
         for (index_t i = 0; i < y.template shape<1>(); i++) {
           for (index_t j = 0; j < y.template shape<0>(); j++) {
             loss += std::pow(y(i, j) - t(i, j), 2);
@@ -46,7 +46,7 @@ namespace tino {
      public:
       static T f(tensor2d<T>& y, tensor2d<T>& t, core::context& ctx) {
         using index_t = typename tensor2d<T>::index_t;
-        T loss = 0;
+        T loss        = 0;
         for (index_t i = 0; i < y.template shape<1>(); i++) {
           for (index_t j = 0; j < y.template shape<0>(); j++) {
             loss += t(i, j) * std::log(FLT_MIN + y(i, j));

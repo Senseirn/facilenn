@@ -48,9 +48,9 @@ namespace tino {
         std::uniform_int_distribution<> dist(0, 1);
 
         for (std::size_t i = 0; i < train_inputs.template shape<1>(); i++) {
-          const auto x1 = dist(mt);
-          const auto x2 = dist(mt);
-          const auto l1 = x1 == x2 ? 0 : 1;
+          const auto x1      = dist(mt);
+          const auto x2      = dist(mt);
+          const auto l1      = x1 == x2 ? 0 : 1;
           train_inputs(i, 0) = x1;
           train_inputs(i, 1) = x2;
           train_labels(i, 0) = l1;
