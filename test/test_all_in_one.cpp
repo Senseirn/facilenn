@@ -30,7 +30,7 @@ int main() {
     adam.alpha(0.001f);
 
     // run 10 epochs with batch_size 200
-    int n_epochs    = 1;
+    int n_epochs    = 2;
     int n_batchsize = 200;
 
     mnist_loader mnist("../../data/mnist/train-images-idx3-ubyte", "../../data/mnist/train-labels-idx1-ubyte");
