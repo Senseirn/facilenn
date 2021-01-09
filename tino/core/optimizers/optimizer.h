@@ -7,7 +7,7 @@
 namespace tino {
   namespace core {
     namespace optimizers {
-      enum class optimizer_t { abstract, sgd, momentum, adagrad, adam };
+      enum class optimizer_t { none, abstract, sgd, momentum, adagrad, adam };
 
       template <typename T>
       class abstract_optimizer_ {

@@ -37,6 +37,8 @@ namespace tino {
         std::unique_ptr<optimizers::abstract_optimizer_<T>> operator()() const {
           return std::make_unique<optimizers::sgd_optimizer_<T>>(_alpha);
         }
+
+        optimizer_t type() const { return optimizer_t::sgd; }
       };
 
       template <typename T = TINO_FLOAT_TYPE>
@@ -81,6 +83,8 @@ namespace tino {
         std::unique_ptr<optimizers::abstract_optimizer_<T>> operator()() const {
           return std::make_unique<optimizers::adam_optimizer_<T>>(_alpha, _b1, _b2, _eps);
         }
+
+        optimizer_t type() const { return optimizer_t::adam; }
       };
 
       using SGD = SGD_<TINO_FLOAT_TYPE>;

@@ -17,6 +17,7 @@ namespace tino {
     std::vector<std::unique_ptr<layers::abstract_layer<T>>> _net;
     std::function<void(tensor2d<T>&)> _weight_initializer;
     bool _is_initialized = false;
+    core::optimizers::optimizer_t _current_optimizer = core::optimizers::optimizer_t::none;
 
     void prepare_batched_data(tensor2d<T>& inputs,
                               tensor2d<T>& labels,
@@ -94,10 +95,14 @@ namespace tino {
       if (!_is_initialized) {
         // weight initialize function
         initialize(_weight_initializer, n_batchsize);
+        set_optimizer_each_layer(optimizer);
       }
 
       // set optimizer for each layer
-      set_optimizer_each_layer(optimizer);
+      if (_current_optimizer != optimizer.type()) {
+        set_optimizer_each_layer(optimizer);
+        _current_optimizer = optimizer.type();
+      }
 
       // prepare input and label vectors
       std::vector<tensor2d<T>> train_inputs_batched, train_labels_batched;
