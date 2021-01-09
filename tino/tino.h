@@ -108,17 +108,25 @@ namespace tino {
 
       std::string output_text;
 
+      float elapsed     = 0;
+      float duration    = 0;
+      float per_sample  = 0;
+      float loss        = 0;
+      float accuracy    = 0;
+      int correct_count = 0;
+
       // Print training infomation
       output_text =
-          "Pre-Train Info [Backend=" + ctx.backend_type() + ", ParallelBackend=" + ctx.prallelize_type() + ", Epoch=" + std::to_string(n_epochs) + ", Batchsize=" + std::to_string(n_batchsize) + "]";
+          "Pre-Train Info: [Backend=" + ctx.backend_type() + ", ParallelBackend=" + ctx.prallelize_type() + ", Epoch=" + std::to_string(n_epochs) + ", Batchsize=" + std::to_string(n_batchsize) + "]";
       std::cout << output_text << std::endl;
 
       std::chrono::system_clock::time_point start = std::chrono::system_clock::now(), point = std::chrono::system_clock::now();
       for (std::size_t epoch = 1; epoch <= n_epochs; epoch++) {
         std::cout << "epoch " << epoch << "/" << n_epochs << std::endl;
-        T loss            = 0;
-        int correct_count = 0;
-        output_text       = "- ";
+        output_text   = "- ";
+        loss          = 0;
+        accuracy      = 0;
+        correct_count = 0;
         for (std::size_t batch_idx = 0; batch_idx < n_minibatchs; batch_idx++) {
           forward(train_inputs_batched[batch_idx], ctx);
           loss += calc_loss<loss_func>(train_labels_batched[batch_idx], ctx);
@@ -145,20 +153,25 @@ namespace tino {
               }
             }
         }
+        loss /= n_samples;
+        accuracy = (float)correct_count / n_samples * 100;
 
-        output_text += "loss: " + std::to_string(loss / n_samples) + " - ";
-        output_text += "acc: " + std::to_string((float)correct_count / n_samples * 100) + "% - ";
+        output_text += "loss: " + std::to_string(loss) + " - ";
+        output_text += "acc: " + std::to_string(accuracy) + "% - ";
 
-        float elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start).count() / 1000.f;
+        elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start).count() / 1000.f;
         output_text += "elaplsed: " + std::to_string(elapsed) + "s - ";
 
-        float duration   = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - point).count() / 1000.f;
-        float per_sample = duration / n_samples;
+        duration   = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - point).count() / 1000.f;
+        per_sample = duration / n_samples;
         output_text += "duration: " + std::to_string(duration) + "s (=" + std::to_string(per_sample * 1000 * 1000) + "us/sample)";
         std::cout << output_text << std::endl;
 
         point = std::chrono::system_clock::now();
       }
+      output_text = "---\nTrain Summary: [loss=" + std::to_string(loss) + ", acc=" + std::to_string(accuracy) + "%, elapsed=" + std::to_string(elapsed) +
+                    "s, average duration=" + std::to_string(elapsed / n_epochs) + "s]";
+      std::cout << output_text << std::endl;
     }
 
     bool is_ready() {
