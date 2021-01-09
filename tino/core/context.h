@@ -2,6 +2,8 @@
 
 #include "tino/backends/backend_types.h"
 
+#include <string>
+
 namespace tino {
   namespace core {
     enum class stages { train, infer };
@@ -12,9 +14,7 @@ namespace tino {
       stages _stage;
 
      public:
-      context(const backends::backend_t& backend      = backends::backend_t::naive,
-              const backends::parallelize_t& parallel = backends::parallelize_t::none,
-              const stages& stage                     = stages::train)
+      context(const backends::backend_t& backend = backends::backend_t::naive, const backends::parallelize_t& parallel = backends::parallelize_t::none, const stages& stage = stages::train)
       : _backend(backend)
       , _parallel(parallel)
       , _stage(stage) {}
@@ -47,6 +47,26 @@ namespace tino {
       context& set_stage(const stages stage) {
         _stage = stage;
         return *this;
+      }
+
+      std::string backend_type() {
+        if (_backend == backends::backend_t::naive)
+          return "naive";
+        else if (_backend == backends::backend_t::openblas)
+          return "OpenBLAS";
+        else
+          return "error";
+      }
+
+      std::string prallelize_type() {
+        if (_parallel == backends::parallelize_t::none)
+          return "none";
+        else if (_parallel == backends::parallelize_t::intel_tbb)
+          return "Intel TBB";
+        else if (_parallel == backends::parallelize_t::openmp)
+          return "OpenMP";
+        else
+          return "error";
       }
     };
   } // namespace core

@@ -107,9 +107,15 @@ namespace tino {
       std::size_t n_samples    = n_minibatchs * train_inputs_batched[0].template shape<1>();
 
       std::string output_text;
+
+      // Print training infomation
+      output_text =
+          "Pre-Train Info [Backend=" + ctx.backend_type() + ", ParallelBackend=" + ctx.prallelize_type() + ", Epoch=" + std::to_string(n_epochs) + ", Batchsize=" + std::to_string(n_batchsize) + "]";
+      std::cout << output_text << std::endl;
+
       std::chrono::system_clock::time_point start = std::chrono::system_clock::now(), point = std::chrono::system_clock::now();
       for (std::size_t epoch = 1; epoch <= n_epochs; epoch++) {
-        std::cout << "epoch " << epoch << std::endl;
+        std::cout << "epoch " << epoch << "/" << n_epochs << std::endl;
         T loss            = 0;
         int correct_count = 0;
         output_text       = "- ";
