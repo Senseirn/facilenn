@@ -7,6 +7,8 @@
 #include "models/models.h"
 #include "utils/utils.h"
 
+#include <chrono>
+
 namespace tino {
   template <typename T>
   class netowork_;
@@ -19,11 +21,7 @@ namespace tino {
     bool _is_initialized                             = false;
     core::optimizers::optimizer_t _current_optimizer = core::optimizers::optimizer_t::none;
 
-    void prepare_batched_data(tensor2d<T>& inputs,
-                              tensor2d<T>& labels,
-                              std::vector<tensor2d<T>>& batched_inputs,
-                              std::vector<tensor2d<T>>& batched_labels,
-                              std::size_t n_minibatchs) {
+    void prepare_batched_data(tensor2d<T>& inputs, tensor2d<T>& labels, std::vector<tensor2d<T>>& batched_inputs, std::vector<tensor2d<T>>& batched_labels, std::size_t n_minibatchs) {
       std::size_t batchs = inputs.template shape<1>() / n_minibatchs;
       batched_inputs.resize(batchs);
       batched_labels.resize(batchs);
@@ -81,12 +79,7 @@ namespace tino {
     }
 
     template <loss::loss_t loss_func, class Optimizer>
-    void train(tensor2d<T>& train_inputs,
-               tensor2d<T>& train_labels,
-               std::size_t n_epochs,
-               std::size_t n_batchsize,
-               const Optimizer& optimizer,
-               core::context& ctx) {
+    void train(tensor2d<T>& train_inputs, tensor2d<T>& train_labels, std::size_t n_epochs, std::size_t n_batchsize, const Optimizer& optimizer, core::context& ctx) {
       using namespace tino::core;
       using namespace tino::backends;
       ctx.stage(stages::train);
@@ -111,23 +104,25 @@ namespace tino {
       }
       prepare_batched_data(train_inputs, train_labels, train_inputs_batched, train_labels_batched, n_batchsize);
       std::size_t n_minibatchs = train_inputs.template shape<1>() / n_batchsize;
+      std::size_t n_samples    = n_minibatchs * train_inputs_batched[0].template shape<1>();
 
+      std::string output_text;
+
+      // Print training infomation
+      output_text =
+          "Pre-Train Info [Backend=" + ctx.backend_type() + ", ParallelBackend=" + ctx.prallelize_type() + ", Epoch=" + std::to_string(n_epochs) + ", Batchsize=" + std::to_string(n_batchsize) + "]";
+      std::cout << output_text << std::endl;
+
+      std::chrono::system_clock::time_point start = std::chrono::system_clock::now(), point = std::chrono::system_clock::now();
       for (std::size_t epoch = 1; epoch <= n_epochs; epoch++) {
-        std::cout << "epoch: " << epoch << std::endl;
+        std::cout << "epoch " << epoch << "/" << n_epochs << std::endl;
         T loss            = 0;
         int correct_count = 0;
+        output_text       = "- ";
         for (std::size_t batch_idx = 0; batch_idx < n_minibatchs; batch_idx++) {
           forward(train_inputs_batched[batch_idx], ctx);
-          loss += calc_loss<loss_func>(train_labels_batched[batch_idx],
-                                       ctx); // calc_loss(train_labels_batched[batch_idx], ctx);
+          loss += calc_loss<loss_func>(train_labels_batched[batch_idx], ctx);
           backward(train_labels_batched[batch_idx], ctx);
-
-          /*
-                    std::cout << batch_idx << ": input: " << train_inputs_batched[batch_idx](0, 0) << " "
-                              << train_inputs_batched[batch_idx](0, 1) << " " << train_labels_batched[batch_idx](0, 0)
-             << " "
-                              << _net.back()->out()(0, 0) << " " << std::endl;
-                              */
 
           if (1)
             for (int b = 0; b < (int)n_batchsize; b++) {
@@ -150,9 +145,19 @@ namespace tino {
               }
             }
         }
-        std::cout << "loss: " << loss / (n_minibatchs * train_inputs_batched[0].template shape<1>()) << std::endl;
-        std::cout << "acc: " << (float)correct_count / (n_minibatchs * train_inputs_batched[0].template shape<1>()) * 100 << " %"
-                  << std::endl;
+
+        output_text += "loss: " + std::to_string(loss / n_samples) + " - ";
+        output_text += "acc: " + std::to_string((float)correct_count / n_samples * 100) + "% - ";
+
+        float elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start).count() / 1000.f;
+        output_text += "elaplsed: " + std::to_string(elapsed) + "s - ";
+
+        float duration   = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - point).count() / 1000.f;
+        float per_sample = duration / n_samples;
+        output_text += "duration: " + std::to_string(duration) + "s (=" + std::to_string(per_sample * 1000 * 1000) + "us/sample)";
+        std::cout << output_text << std::endl;
+
+        point = std::chrono::system_clock::now();
       }
     }
 

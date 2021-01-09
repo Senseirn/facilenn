@@ -45,12 +45,9 @@ namespace tino {
       tensor2d<T>& backward(tensor2d<T>& next_delta, core::context& ctx) override {
 
         if (this->_prev_layer)
-          this->_prev_layer->backward(op::fully_connected_backward_kernel(
-                                          this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx),
-                                      ctx);
+          this->_prev_layer->backward(op::fully_connected_backward_kernel(this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx), ctx);
         else {
-          op::fully_connected_backward_kernel(
-              this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx);
+          op::fully_connected_backward_kernel(this->_in, next_delta, this->_weight, this->_delta, this->_delta_weight, this->_delta_bias, ctx);
         }
         return this->_delta;
       }
