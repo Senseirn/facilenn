@@ -46,8 +46,7 @@ namespace tino {
       tensor2d<T>& blas_gemm(core::context& ctx, const blasOpts<T>& blas_opts, tensor2d<T>& A, tensor2d<T>& B, tensor2d<T>& C) {}
 
       template <>
-      tensor2d<float>&
-      blas_gemm(core::context& ctx, const blasOpts<float>& blas_opts, tensor2d<float>& A, tensor2d<float>& B, tensor2d<float>& C) {
+      tensor2d<float>& blas_gemm(core::context& ctx, const blasOpts<float>& blas_opts, tensor2d<float>& A, tensor2d<float>& B, tensor2d<float>& C) {
 #ifdef TINO_OPENBLAS_READY
         const int M   = blas_opts.trans_a == trans_t::NoTrans ? A.template shape<1>() : A.template shape<0>();
         const int N   = blas_opts.trans_b == trans_t::NoTrans ? B.template shape<0>() : B.template shape<1>();
